@@ -41,10 +41,10 @@
 
 <!--A-Frame場景-->
     <a-scene 
-    vr-mode-ui="enable:false"
-    renderer="logarithmicDepthBuffer:true"
-    embedded 
-    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+      vr-mode-ui="enable:false"
+      renderer="logarithmicDepthBuffer:true"
+      embedded 
+      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
     >
      <!--VR UI模組不顯示-->
      <!--WEB渲染器 增加AR模型環境遠近距離的渲染精度 顯示時更加穩定--> 
@@ -53,35 +53,36 @@
 
 
      <!--載入影片資源-->    
-        <a-assets>
-            <video id="ARVideo" autoplay loop muted playsinline src="./assets/try_2.mp4"></video>
-        </a-assets>
-        <!--autoplay自動播放 loop循環播放 muted靜音 playsinline影片在網頁內坎播放(不跳全螢幕)--> 
+      <a-assets>
+        <video id="ARVideo" autoplay loop muted playsinline src="./assets/try_2.mp4"></video>
+      </a-assets>
+      <!--autoplay自動播放 loop循環播放 muted靜音 playsinline影片在網頁內坎播放(不跳全螢幕)--> 
 
  
     
-        <a-nft
+      <a-nft
         type="nft"
         url="./assets/mathbook_try"
         smooth="true"
         smoothCount="10"
         smoothTolerance="0.01"
         smoothThreshold="5"
-        >
+      >
          <!--取最近 10 幀的平均位置來決定模型位置,當模型的移動小於0.01時，會被忽略（不更新位置）,當模型移動超過5時，才會重設平滑-->
-            <a-video
-            src="#ARVideo"
-            width="1"
-            height="0.5625"
-            position="0 0 0"
-            rotation="-90 0 0"
-            ></a-video>
+        <a-video
+          src="#ARVideo"
+          width="1"
+          height="0.5625"
+          position="0 0 0"
+          rotation="-90 0 0"
+        >
+        </a-video>
         </a-nft>
 
 
 
         <!--讓A-Frame 用裝置鏡頭來「看世界」--> 
-        <a-entity camera></a-entity>
+      <a-entity camera></a-entity>
     </a-scene>
 </body>
 </html>
