@@ -84,5 +84,11 @@
         <!--讓A-Frame 用裝置鏡頭來「看世界」--> 
       <a-entity camera></a-entity>
     </a-scene>
+    <script>
+      document.querySelector('a-scene').addEventListener('loaded', () => {
+        document.querySelector('.arjs-loader').style.display = 'none';
+      });
+    </script>
+
 </body>
 </html>
