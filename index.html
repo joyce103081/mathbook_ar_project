@@ -10,8 +10,26 @@
     <!--匯入 A-Frame：用來建立 3D 場景-->
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
     <!--匯入 AR.js 的 NFT 模組：支援圖片追蹤-->
+    <style>
+    .arjs-loader {
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-    <link rel="stylesheet" href="./css/main.css">
+  .arjs-loader div {
+    text-align: center;
+    font-size: 1.25em;
+    color: white;
+  }
+</style>
 </head>
 <body>
     <!--開頭loading畫面-->
