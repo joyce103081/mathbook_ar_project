@@ -1,3 +1,8 @@
+body{
+    margin: 0px;
+    overflow: hidden;
+}
+
 /*設定開頭loading UI畫面*/
 .arjs-loader{
     width: 100%;
