@@ -12,6 +12,7 @@
         marker.addEventListener(
           "markerFound",
           function() {
+            console.log("Marker Found!");
             this.vid.play();
           }.bind(this)
         );
@@ -79,9 +80,9 @@
       type="nft"
       url="https://joyce103081.github.io/mathbook_ar_project/mathbook_try"
       smooth="true"
-      smoothount="10"
-      smoothtolerance="0.01"
-      smooththreshold="5"
+      smoothCount="10"
+      smoothTolerance="0.01"
+      smoothThreshold="5"
     >
       <a-video src="#vid" rotation="-90 0 0" position="50 150 -100" width="300" height="175">
       </a-video>
@@ -93,4 +94,5 @@
         document.querySelector('.arjs-loader').style.display = 'none';
       });
     </script>
+    
 </body>
