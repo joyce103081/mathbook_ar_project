@@ -52,7 +52,7 @@
 
 <body style="margin : 0px; overflow: hidden;">
   <div class="arjs-loader">
-    <div>載入中，請稍等...</div>
+    <div>Loading, please wait...</div>
   </div>
   <a-scene
     vr-mode-ui="enabled: false;"
@@ -61,7 +61,18 @@
     arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
   >
     <a-assets>
-      <img id="boomi" src="assets/asset.gif" crossorigin="anonymous" />
+      <video
+        src="https://joyce103081.github.io/mathbook_ar_project/try_2.mp4"
+        preload="auto"
+        id="vid"
+        response-type="arraybuffer"
+        loop
+        crossorigin
+        webkit-playsinline
+        autoplay
+        muted
+        playsinline
+      ></video>
     </a-assets>
 
     <a-nft
@@ -73,16 +84,11 @@
       smoothTolerance="0.08"
       smoothThreshold="10"
     >
-      <a-image
-        src="#boomi"
-        scale="1 1 1"
-        rotation="-90 0 0"
-        position="0 0 0"
-      ></a-image>    
+      <a-video src="#vid" rotation="-90 0 0" position="50 -100 -150" width="210" height="124">
+      </a-video>
     </a-nft>
     <a-entity camera></a-entity>
   </a-scene>
-    
    <script>
       document.querySelector('a-scene').addEventListener('loaded', () => {
         document.querySelector('.arjs-loader').style.display = 'none';
