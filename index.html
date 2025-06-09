@@ -60,15 +60,6 @@ Z<script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa9396
     embedded
     arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
   >
-    <a-assets>
-      <a-image
-        src="https://joyce103081.github.io/mathbook_ar_project/assets/asset.gif"
-        scale="1 1 1"
-        id="imag"
-        gesture-handler
-      ></a-image>
-    </a-assets>
-
     <a-nft
       videohandler
       type="nft"
@@ -78,10 +69,19 @@ Z<script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa9396
       smoothTolerance="0.08"
       smoothThreshold="10"
     >
-      <a-image src="#imag" rotation="-90 0 0" position="50 -100 -150" width="210" height="124">
-      </a-image>
+      <a-image
+        src="https://joyce103081.github.io/mathbook_ar_project/assets/asset.gif"
+        scale="1 1 1"
+        id="imag"
+        rotation="-90 0 0"
+        position="50 -100 -150"
+        width="210" 
+        height="124"
+      ></a-image>
     </a-nft>
+    
     <a-entity camera></a-entity>
+    
   </a-scene>
    <script>
       document.querySelector('a-scene').addEventListener('loaded', () => {
