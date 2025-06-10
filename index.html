@@ -62,11 +62,12 @@
   >
     <a-assets>
       <video
-        src="https://joyce103081.github.io/mathbook_ar_project/T3webm.webm"
+        src="https://joyce103081.github.io/mathbook_ar_project/try_2(3)webm.webm"
         preload="auto"
-        id="vid"   
+        id="vid"
+        response-type="arraybuffer"
         loop
-        crossorigin="anonymous"
+        crossorigin
         webkit-playsinline
         autoplay
         muted
@@ -83,7 +84,7 @@
       smoothTolerance="0.08"
       smoothThreshold="10"
     >
-      <a-video src="#vid" rotation="-90 0 0" position="50 -100 -150" width="210" height="124" transparent="true" alpha-test="0.5" material="shader: flat; transparent: true;">
+      <a-video src="#vid" rotation="-90 0 0" position="50 -100 -150" width="210" height="124">
       </a-video>
     </a-nft>
     <a-entity camera></a-entity>
