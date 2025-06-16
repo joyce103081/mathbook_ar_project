@@ -6,8 +6,9 @@
     AFRAME.registerComponent("videohandler", {
       init: function() {
         var marker = this.el;
-
         this.vid = document.querySelector("#vid");
+        const boomigif = document.querySelector("#boomigif");
+        const boomivid = document.querySelector("#boomivid");
 
         marker.addEventListener(
           "markerFound",
@@ -24,10 +25,24 @@
             this.vid.currentTime = 0;
           }.bind(this)
         );
+        
+        this.vid.addEventListener("ended", function () {
+        console.log("Video ended. Showing GIF.");
+        boomigif.setAttribute("visible", true);
+        boomivid.setAttribute("visible", false);
+        });
       }
     });
   };
 </script>
+
+
+<script>
+  document.querySelector('a-scene').addEventListener('loaded', () => {
+    document.querySelector('.arjs-loader').style.display = 'none';
+  });
+</script>
+
 
 <style>
   .arjs-loader {
@@ -52,7 +67,7 @@
 
 <body style="margin : 0px; overflow: hidden;">
   <div class="arjs-loader">
-    <div>Loading, please wait...</div>
+    <div>載入中，請稍等...</div>
   </div>
   <a-scene
     vr-mode-ui="enabled: false;"
@@ -62,17 +77,24 @@
   >
     <a-assets>
       <video
+        id="vid"
         src="https://joyce103081.github.io/mathbook_ar_project/try_2.mp4"
         preload="auto"
-        id="vid"
         response-type="arraybuffer"
-        loop
-        crossorigin
+        loop="false"
+        crossorigin="anonymous"
         webkit-playsinline
         autoplay
         muted
         playsinline
       ></video>
+
+      <img 
+        id="gif"
+        src="https://你的網址/boomi_greeting.gif"
+        crossorigin="anonymous"
+      />
+      
     </a-assets>
 
     <a-nft
@@ -84,15 +106,23 @@
       smoothTolerance="0.08"
       smoothThreshold="10"
     >
-      <a-video src="#vid" rotation="-90 0 0" position="50 -100 -150" width="210" height="124">
+      <a-video id="boomivid" src="#vid" rotation="-90 0 0" position="50 -100 -150" width="210" height="124">
       </a-video>
+      
+      <a-image
+        id="boomigif"
+        src="#gif"
+        visible="false"
+        rotation="0 0 0"
+        position="50 -100 -150"
+        width="210"
+        height="124"
+      ></a-image>
+      
     </a-nft>
+    
     <a-entity camera></a-entity>
   </a-scene>
-   <script>
-      document.querySelector('a-scene').addEventListener('loaded', () => {
-        document.querySelector('.arjs-loader').style.display = 'none';
-      });
-    </script>
+
     
 </body>
