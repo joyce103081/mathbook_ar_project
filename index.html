@@ -31,16 +31,13 @@
           boomigif.setAttribute("visible", false); 
           boomivid.setAttribute("visible", false);
 
-          const helloboomigif= document.createElement("a-video"); 
-          helloboomigif.setAttribute("src","#boomiwebm");
+          const helloboomigif= document.createElement("a-image"); 
+          helloboomigif.setAttribute("src","#gif");
           helloboomigif.setAttribute("position","-150 0 -1200");
           helloboomigif.setAttribute("rotation","0 0 0");
           helloboomigif.setAttribute("width","298");
           helloboomigif.setAttribute("height","420");
           helloboomigif.setAttribute("look-at","[camera]");
-          helloboomigif.setAttribute("autoplay","true");
-          helloboomigif.setAttribute("loop","true");
-          helloboomigif.setAttribute("muted","true");
           document.querySelector("a-scene").appendChild(helloboomigif);
         });
       }
