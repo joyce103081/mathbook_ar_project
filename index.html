@@ -27,19 +27,21 @@
         );
         
         this.vid.addEventListener("ended", function () {
-        console.log("Video ended. Showing GIF.");
-        boomigif.setAttribute("visible", false); 
-        boomivid.setAttribute("visible", false);
+          setTimeout(() => {
+            console.log("Video ended. Showing GIF.");
+            boomigif.setAttribute("visible", false); 
+            boomivid.setAttribute("visible", false);
 
-        const helloboomigif= document.createElement("a-image"); 
-        helloboomigif.setAttribute("src","#gif");
-        helloboomigif.setAttribute("position","-150 0 -1200");
-        helloboomigif.setAttribute("rotation","0 0 0");
-        helloboomigif.setAttribute("width","298");
-        helloboomigif.setAttribute("height","420");
-        helloboomigif.setAttribute("look-at","[camera]");
-        document.querySelector("a-scene").appendChild(helloboomigif);
-        },500);
+            const helloboomigif= document.createElement("a-video"); 
+            helloboomigif.setAttribute("src","#gif");
+            helloboomigif.setAttribute("position","-150 0 -1200");
+            helloboomigif.setAttribute("rotation","0 0 0");
+            helloboomigif.setAttribute("width","298");
+            helloboomigif.setAttribute("height","420");
+            helloboomigif.setAttribute("look-at","[camera]");
+            document.querySelector("a-scene").appendChild(helloboomigif);
+          },500);
+       }); 
       }
     });
   };
@@ -97,12 +99,6 @@
         muted
         playsinline
       ></video>
-
-      <img 
-        id="gif"
-        src="https://joyce103081.github.io/mathbook_ar_project/hello-gif.gif"
-        crossorigin="anonymous"
-      />
       
     </a-assets>
 
@@ -120,7 +116,7 @@
       
       <a-image
         id="boomigif"
-        src="#gif"
+        src="https://joyce103081.github.io/mathbook_ar_project/hello-gif.gif"
         visible="false"
         rotation="-90 0 0"
         position="50 -100 -150"
