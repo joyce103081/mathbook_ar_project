@@ -31,8 +31,9 @@
           boomigif.setAttribute("visible", false); 
           boomivid.setAttribute("visible", false);
 
-          const helloboomigif= document.createElement("a-image"); 
+          const helloboomigif= document.createElement("a-plane"); 
           helloboomigif.setAttribute("src","#gif");
+          helloboomigif.setAttribute("material","transparent: true");
           helloboomigif.setAttribute("position","-150 0 -1200");
           helloboomigif.setAttribute("rotation","0 0 0");
           helloboomigif.setAttribute("width","298");
@@ -115,7 +116,7 @@
       <a-video id="boomivid" src="#vid" rotation="-90 0 0" position="50 -100 -150" width="210" height="124">
       </a-video>
       
-      <a-image
+      <a-plane
         id="boomigif"
         src="#gif"
         visible="false"
@@ -123,7 +124,8 @@
         position="50 -100 -150"
         width="29.8"
         height="42"
-      ></a-image>
+        material="transparent: true"
+      ></a-plane>
       
     </a-nft>
     
