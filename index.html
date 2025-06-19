@@ -33,7 +33,8 @@
           if (oldGif) {
             oldGif.remove();}
           
-          const helloboomigif= document.createElement("a-entity"); 
+          const helloboomigif= document.createElement("a-entity");
+          helloboomigif.setAttribute("id", "helloboomigif");
           helloboomigif.setAttribute("material","shader: gif; src: url(https://joyce103081.github.io/mathbook_ar_project/hello3.0.gif); transparent: true");
           helloboomigif.setAttribute("geometry","primitive: plane; height: 420; width: 298");
           helloboomigif.setAttribute("position","-150 0 -1200");
