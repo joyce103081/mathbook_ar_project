@@ -29,11 +29,16 @@
         this.vid.addEventListener("ended", function () {
           console.log("Video ended. Showing GIF.");
           boomivid.setAttribute("visible", false);
-          
-          boomigif.removeAttribute("material"); 
-          boomigif.setAttribute("visible", true); 
-          boomigif.setAttribute("material","shader: gif; src: url(https://joyce103081.github.io/mathbook_ar_project/hello-gif.gif); transparent: true");
-          boomigif.setAttribute("look-at","[camera]");
+          boomigif.setAttribute("visible", false); 
+          boomigif.removeAttribute("material");
+
+          const helloboomigif= document.createElement("a-entity"); 
+          helloboomigif.setAttribute("material","shader: gif; src: url(https://joyce103081.github.io/mathbook_ar_project/hello-gif.gif); transparent: true");
+          helloboomigif.setAttribute("geometry","primitive: plane; height: 420; width: 298");
+          helloboomigif.setAttribute("position","-150 0 -1200");
+          helloboomigif.setAttribute("rotation","0 0 0");
+          helloboomigif.setAttribute("look-at","[camera]");
+          document.querySelector("a-scene").appendChild(helloboomigif);
         });
       }
     });
@@ -110,7 +115,7 @@
 
       <a-entity
         id="boomigif"
-        geometry="primitive: plane; height: 420; width: 298"
+        geometry="primitive: plane; height: 42; width: 29.8"
         material="shader: gif; src: url(https://joyce103081.github.io/mathbook_ar_project/hello-gif.gif); transparent: true"
         position="-150 0 -1200"
         rotation="0 0 0"
