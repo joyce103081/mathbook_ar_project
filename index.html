@@ -28,6 +28,10 @@
         this.vid.addEventListener("ended", function () {
           console.log("Video ended. Showing GIF.");
           boomivid.setAttribute("visible", false);
+
+          const oldGif = document.querySelector("#helloboomigif");
+          if (oldGif) {
+            oldGif.remove();}
           
           const helloboomigif= document.createElement("a-entity"); 
           helloboomigif.setAttribute("material","shader: gif; src: url(https://joyce103081.github.io/mathbook_ar_project/hello3.0.gif); transparent: true");
@@ -36,11 +40,6 @@
           helloboomigif.setAttribute("rotation","0 0 0");
           helloboomigif.setAttribute("look-at","[camera]");
           document.querySelector("a-scene").appendChild(helloboomigif);
-          
-          const existingGif = document.querySelector(helloboomigif);
-          if (existingGif) {
-            existingGif.remove();
-          }
         });
       }
     });
