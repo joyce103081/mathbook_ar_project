@@ -1,5 +1,6 @@
 <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
 <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+<script src="https://rawgit.com/mayognaise/aframe-gif-shader/master/dist/aframe-gif-shader.min.js"></script>
 <script>
   window.onload = function() {
     AFRAME.registerComponent("videohandler", {
@@ -30,13 +31,11 @@
           boomigif.setAttribute("visible", false); 
           boomivid.setAttribute("visible", false);
 
-          const helloboomigif= document.createElement("a-plane"); 
-          helloboomigif.setAttribute("src","#gif");
-          helloboomigif.setAttribute("material","transparent: true;shader: flat");
+          const helloboomigif= document.createElement("a-entity"); 
+          helloboomigif.setAttribute("material","shader: gif; src: #gif; transparent: true");
+          helloboomigif.setAttribute("geometry","primitive: plane; height: 420; width: 298");
           helloboomigif.setAttribute("position","-150 0 -1200");
           helloboomigif.setAttribute("rotation","0 0 0");
-          helloboomigif.setAttribute("width","298");
-          helloboomigif.setAttribute("height","420");
           helloboomigif.setAttribute("look-at","[camera]");
           document.querySelector("a-scene").appendChild(helloboomigif);
         });
@@ -116,16 +115,14 @@
       <a-video id="boomivid" src="#vid" rotation="-90 0 0" position="50 -100 -150" width="210" height="124">
       </a-video>
       
-      <a-plane
+      <a-entity
         id="boomigif"
-        src="#gif"
-        visible="false"
-        rotation="-90 0 0"
+        geometry="primitive: plane; height: 420; width: 298"
+        material="shader: gif; src: #gif; transparent: true"
         position="50 -100 -150"
-        width="29.8"
-        height="42"
-        material="transparent: true;shader: flat"
-      ></a-plane>
+        rotation="-90 0 0"
+        visible="false"
+      ></a-entity>
       
     </a-nft>
     
