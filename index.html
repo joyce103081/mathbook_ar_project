@@ -1,5 +1,6 @@
 <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
 <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+<script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
 <script src="https://rawgit.com/mayognaise/aframe-gif-shader/master/dist/aframe-gif-shader.min.js"></script>
 <script>
   window.onload = function() {
@@ -7,6 +8,7 @@
       init: function() {
         var marker = this.el;
         this.vid = document.querySelector("#vid");
+        const boomigif = document.querySelector("#boomigif");
         const boomivid = document.querySelector("#boomivid");
 
         marker.addEventListener(
@@ -26,37 +28,21 @@
         );
         
         this.vid.addEventListener("ended", function () {
-          console.log("Video ended. Showing GIF.");
+          console.log("Video ended. Showing boomismile.");
+          boomismile.setAttribute("visible", true); 
           boomivid.setAttribute("visible", false);
-
-          setTimeout(() => {
-            const scene = document.querySelector("a-scene");
-
-            const oldGif = document.querySelector("#helloboomigif");
-            if (oldGif && oldGif.parentNode) {
-              oldGif.parentNode.removeChild(oldGif);}
-          
-            const helloboomigif= document.createElement("a-entity");
-            helloboomigif.setAttribute("id", "helloboomigif");
-            helloboomigif.setAttribute("material","shader: gif; src: url(https://joyce103081.github.io/mathbook_ar_project/hello5.0.gif); transparent: true");
-            helloboomigif.setAttribute("geometry","primitive: plane; height: 420; width: 298");
-            helloboomigif.setAttribute("position","-150 0 -1200");
-            helloboomigif.setAttribute("rotation","0 0 0");
-            helloboomigif.setAttribute("look-at","[camera]");
-            document.querySelector("a-scene").appendChild(helloboomigif);
-          },500);
         });
       }
     });
   };
 </script>
 
+
 <script>
   document.querySelector("a-scene").addEventListener("loaded", () => {
     document.querySelector(".arjs-loader").style.display = 'none';
   });
 </script>
-
 
 
 <style>
@@ -81,17 +67,15 @@
 </style>
 
 <body style="margin : 0px; overflow: hidden;">
-
   <div class="arjs-loader">
     <div>載入中，請稍等...</div>
   </div>
-
   <a-scene
     vr-mode-ui="enabled: false;"
     renderer="antialias: true; alpha: true; precision: mediump;"
     embedded
-    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
-
+    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+  >
     <a-assets>
       <video
         id="vid"
@@ -104,7 +88,12 @@
         autoplay
         muted
         playsinline
-      ></video>      
+      ></video>
+      
+      <img
+        id="smile"
+        src="https://joyce103081.github.io/mathbook_ar_project/smile.png"
+        crossorigin="anonymous"/>
     </a-assets>
 
     <a-nft
@@ -114,12 +103,23 @@
       smooth="true"
       smoothCount="100"
       smoothTolerance="0.08"
-      smoothThreshold="10">
-
+      smoothThreshold="10"
+    >
       <a-video id="boomivid" src="#vid" rotation="-90 0 0" position="50 -100 -150" width="210" height="124">
       </a-video>
       
+      <a-image
+        id="boomismile"
+        src="#smile"
+        visible="false"
+        rotation="0 0 0"
+        position="-150 0 -1200"
+        width="298"
+        height="420"
+      ></a-image>
+      
     </a-nft>
+    
     <a-entity camera="far: 3000" position="0 0 0"></a-entity>
   </a-scene>
 
