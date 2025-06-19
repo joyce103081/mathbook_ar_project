@@ -26,14 +26,18 @@
         );
         
         this.vid.addEventListener("ended", function () {
-          console.log("Video ended. Showing boomismile.");
-          boomismile.setAttribute("visible", true); 
+          console.log("Video ended. Showing GIF.");
+          boomismile.setAttribute("visible", false); 
           boomivid.setAttribute("visible", false);
 
-          this.vid.addEventListener("ended", function () {
-          console.log("Video ended. Showing GIF.");
-          boomismile.setAttribute("visible", true); 
-          boomivid.setAttribute("visible", false);
+          const helloboomismile= document.createElement("a-image"); 
+          helloboomismile.setAttribute("src","#smile");
+          helloboomismile.setAttribute("position","-150 0 -1200");
+          helloboomismile.setAttribute("rotation","0 0 0");
+          helloboomismile.setAttribute("width","298");
+          helloboomismile.setAttribute("height","420");
+          helloboomismile.setAttribute("look-at","[camera]");
+          document.querySelector("a-scene").appendChild(helloboomismile);
         });
       }
     });
@@ -115,8 +119,8 @@
         id="boomismile"
         src="#smile"
         visible="false"
-        rotation="0 0 0"
-        position="-150 0 -1200"
+        rotation="-90 0 0"
+        position="50 -100 -150"
         width="298"
         height="420"
       ></a-image>
