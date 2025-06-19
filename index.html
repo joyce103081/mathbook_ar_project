@@ -28,24 +28,27 @@
         this.vid.addEventListener("ended", function () {
           console.log("Video ended. Showing GIF.");
           boomivid.setAttribute("visible", false);
+          if (this.gifInterval) {
+            clearInterval(this.gifInterval);
+          }
 
-          setTimeout(() => {
-            const scene = document.querySelector("a-scene");
-
-            const oldGif = document.querySelector("#helloboomigif");
-            if (oldGif && oldGif.parentNode) {
-              oldGif.parentNode.removeChild(oldGif);}
-          
-            const helloboomigif= document.createElement("a-entity");
+         // 無限重複：每次刪除再新增 GIF，達到閃爍效果
+          this.gifInterval = setInterval(() => {
+            const existingGif = document.querySelector("#helloboomigif");
+            if (existingGif && existingGif.parentNode) {
+              existingGif.parentNode.removeChild(existingGif);
+            }
+            
+            const helloboomigif = document.createElement("a-entity");
             helloboomigif.setAttribute("id", "helloboomigif");
-            helloboomigif.setAttribute("material","shader: gif; src: url(https://joyce103081.github.io/mathbook_ar_project/hello3.0.gif); transparent: true");
-            helloboomigif.setAttribute("geometry","primitive: plane; height: 420; width: 298");
-            helloboomigif.setAttribute("position","-150 0 -1200");
-            helloboomigif.setAttribute("rotation","0 0 0");
-            helloboomigif.setAttribute("look-at","[camera]");
+            helloboomigif.setAttribute("material", "shader: gif; src: url(https://joyce103081.github.io/mathbook_ar_project/hello3.0.gif); transparent: true");
+            helloboomigif.setAttribute("geometry", "primitive: plane; height: 420; width: 298");
+            helloboomigif.setAttribute("position", "-150 0 -1200");
+            helloboomigif.setAttribute("rotation", "0 0 0");
+            helloboomigif.setAttribute("look-at", "[camera]");
             document.querySelector("a-scene").appendChild(helloboomigif);
-          },1000);
-        });
+          }, 1000); // 每2秒切換一次 GIF
+        }.bind(this));
       }
     });
   };
