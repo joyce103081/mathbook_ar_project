@@ -29,19 +29,27 @@
         this.vid.addEventListener("ended", function () {
           console.log("Video ended. Showing GIF.");
           boomivid.setAttribute("visible", false);
-          boomigif.setAttribute("visible", true); 
+          boomigif.setAttribute("visible", false); 
+
+          const helloboomigif= document.createElement("a-entity"); 
+          helloboomigif.setAttribute("material","shader: gif; src: url(https://joyce103081.github.io/mathbook_ar_project/hello-gif.gif); transparent: true");
+          helloboomigif.setAttribute("geometry","primitive: plane; height: 420; width: 298");
+          helloboomigif.setAttribute("position","-150 0 -1200");
+          helloboomigif.setAttribute("rotation","0 0 0");
+          helloboomigif.setAttribute("look-at","[camera]");
+          document.querySelector("a-scene").appendChild(helloboomigif);
         });
       }
     });
   };
 </script>
 
-
 <script>
   document.querySelector("a-scene").addEventListener("loaded", () => {
     document.querySelector(".arjs-loader").style.display = 'none';
   });
 </script>
+
 
 
 <style>
@@ -66,15 +74,17 @@
 </style>
 
 <body style="margin : 0px; overflow: hidden;">
+
   <div class="arjs-loader">
     <div>載入中，請稍等...</div>
   </div>
+
   <a-scene
     vr-mode-ui="enabled: false;"
     renderer="antialias: true; alpha: true; precision: mediump;"
     embedded
-    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
-  >
+    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
+
     <a-assets>
       <video
         id="vid"
@@ -97,8 +107,8 @@
       smooth="true"
       smoothCount="100"
       smoothTolerance="0.08"
-      smoothThreshold="10"
-    >
+      smoothThreshold="10">
+
       <a-video id="boomivid" src="#vid" rotation="-90 0 0" position="50 -100 -150" width="210" height="124">
       </a-video>
 
@@ -110,7 +120,8 @@
         rotation="0 0 0"
         visible="false">
       </a-entity>
-     ></a-nft>
+
+     </a-nft>
     
     <a-entity camera="far: 3000" position="0 0 0"></a-entity>
     
