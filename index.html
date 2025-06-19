@@ -36,6 +36,11 @@
           helloboomigif.setAttribute("rotation","0 0 0");
           helloboomigif.setAttribute("look-at","[camera]");
           document.querySelector("a-scene").appendChild(helloboomigif);
+          
+          const existingGif = document.querySelector(helloboomigif);
+          if (existingGif) {
+            existingGif.remove();
+          }
         });
       }
     });
