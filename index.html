@@ -1,5 +1,6 @@
 <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
 <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+
 <script>
   window.onload = function() {
     AFRAME.registerComponent("videohandler", {
@@ -26,17 +27,17 @@
         );
         
         this.vid.addEventListener("ended", function () {
-          console.log("Video ended. Showing GIF.");
+          console.log("Video ended. Showing Image.");
           boomismile.setAttribute("visible", false); 
           boomivid.setAttribute("visible", false);
 
-          const helloboomismile= document.createElement("a-image"); 
-          helloboomismile.setAttribute("src","#smile");
-          helloboomismile.setAttribute("position","-150 0 -1200");
-          helloboomismile.setAttribute("rotation","0 0 0");
-          helloboomismile.setAttribute("width","298");
-          helloboomismile.setAttribute("height","420");
-          helloboomismile.setAttribute("look-at","[camera]");
+          const helloboomismile = document.createElement("a-image"); 
+          helloboomismile.setAttribute("src", "#smile");
+          helloboomismile.setAttribute("position", "-150 0 -1200");
+          helloboomismile.setAttribute("rotation", "0 0 0");
+          helloboomismile.setAttribute("width", "298");
+          helloboomismile.setAttribute("height", "420");
+          helloboomismile.setAttribute("look-at", "[camera]");
           document.querySelector("a-scene").appendChild(helloboomismile);
         });
       }
@@ -44,13 +45,24 @@
   };
 </script>
 
-
 <script>
+  // 隱藏載入畫面
   document.querySelector("a-scene").addEventListener("loaded", () => {
     document.querySelector(".arjs-loader").style.display = 'none';
   });
-</script>
 
+  // 觸發聲音播放的互動事件
+  document.addEventListener("DOMContentLoaded", function () {
+    const scene = document.querySelector("a-scene");
+    const vid = document.querySelector("#vid");
+
+    scene.addEventListener("click", function () {
+      console.log("🔊 使用者互動：開啟聲音播放");
+      vid.muted = false;
+      vid.play();
+    });
+  });
+</script>
 
 <style>
   .arjs-loader {
@@ -73,10 +85,11 @@
   }
 </style>
 
-<body style="margin : 0px; overflow: hidden;">
+<body style="margin: 0px; overflow: hidden;">
   <div class="arjs-loader">
     <div>載入中，請稍等...</div>
   </div>
+
   <a-scene
     vr-mode-ui="enabled: false;"
     renderer="antialias: true; alpha: true; precision: mediump;"
@@ -88,18 +101,19 @@
         id="vid"
         src="https://joyce103081.github.io/mathbook_ar_project/ALL2.0.mp4"
         preload="auto"
-        response-type="arraybuffer"
         loop="false"
         crossorigin="anonymous"
         webkit-playsinline
         autoplay
+        muted
         playsinline
       ></video>
       
       <img
         id="smile"
         src="https://joyce103081.github.io/mathbook_ar_project/smile.png"
-        crossorigin="anonymous"/>
+        crossorigin="anonymous"
+      />
     </a-assets>
 
     <a-nft
@@ -123,11 +137,8 @@
         width="298"
         height="420"
       ></a-image>
-      
     </a-nft>
-    
+
     <a-entity camera="far: 3000" position="0 0 0"></a-entity>
   </a-scene>
-
-    
 </body>
