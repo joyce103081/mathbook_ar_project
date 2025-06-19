@@ -29,9 +29,12 @@
           console.log("Video ended. Showing GIF.");
           boomivid.setAttribute("visible", false);
 
+           setTimeout(() => {
+             const scene = document.querySelector("a-scene");
+
           const oldGif = document.querySelector("#helloboomigif");
-          if (oldGif) {
-            oldGif.remove();}
+          if (oldGif && oldGif.parentNode) {
+            oldGif.parentNode.removeChild(oldGif);}
           
           const helloboomigif= document.createElement("a-entity");
           helloboomigif.setAttribute("id", "helloboomigif");
@@ -41,7 +44,8 @@
           helloboomigif.setAttribute("rotation","0 0 0");
           helloboomigif.setAttribute("look-at","[camera]");
           document.querySelector("a-scene").appendChild(helloboomigif);
-        });
+          }1000);
+         });
       }
     });
   };
