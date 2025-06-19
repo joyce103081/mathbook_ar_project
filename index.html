@@ -29,9 +29,11 @@
         this.vid.addEventListener("ended", function () {
           console.log("Video ended. Showing GIF.");
           boomivid.setAttribute("visible", false);
+          
+          boomigif.removeAttribute("material"); 
+          boomigif.setAttribute("material","shader: gif; src: url(https://joyce103081.github.io/mathbook_ar_project/hello-gif.gif); transparent: true");
           boomigif.setAttribute("visible", true); 
           boomigif.setAttribute("look-at","[camera]");
-          boomigif.setAttribute("material","shader: gif; src: url(https://joyce103081.github.io/mathbook_ar_project/hello-gif.gif); transparent: true");
         });
       }
     });
