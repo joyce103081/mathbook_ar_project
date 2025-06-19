@@ -29,7 +29,9 @@
         this.vid.addEventListener("ended", function () {
           console.log("Video ended. Showing GIF.");
           boomivid.setAttribute("visible", false);
+          boomigif.removeAttribute("material");
           boomigif.setAttribute("visible", false); 
+          
 
           const helloboomigif= document.createElement("a-entity"); 
           helloboomigif.setAttribute("material","shader: gif; src: url(https://joyce103081.github.io/mathbook_ar_project/hello-gif.gif); transparent: true");
