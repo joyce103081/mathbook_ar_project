@@ -30,7 +30,6 @@
           console.log("Video ended. Showing GIF.");
           boomivid.setAttribute("visible", false);
           boomigif.setAttribute("visible", false); 
-          boomigif.removeAttribute("material");
 
           const helloboomigif= document.createElement("a-entity"); 
           helloboomigif.setAttribute("material","shader: gif; src: url(https://joyce103081.github.io/mathbook_ar_project/hello-gif.gif); transparent: true");
@@ -115,7 +114,7 @@
 
       <a-entity
         id="boomigif"
-        geometry="primitive: plane; height: 42; width: 29.8"
+        geometry="primitive: plane; height: 420; width: 298"
         material="shader: gif; src: url(https://joyce103081.github.io/mathbook_ar_project/hello-gif.gif); transparent: true"
         position="-150 0 -1200"
         rotation="0 0 0"
