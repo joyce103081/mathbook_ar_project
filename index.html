@@ -31,8 +31,8 @@
           boomivid.setAttribute("visible", false);
           
           boomigif.removeAttribute("material"); 
-          boomigif.setAttribute("material","shader: gif; src: url(https://joyce103081.github.io/mathbook_ar_project/hello-gif.gif); transparent: true");
           boomigif.setAttribute("visible", true); 
+          boomigif.setAttribute("material","shader: gif; src: url(https://joyce103081.github.io/mathbook_ar_project/hello-gif.gif); transparent: true");
           boomigif.setAttribute("look-at","[camera]");
         });
       }
@@ -111,6 +111,7 @@
       <a-entity
         id="boomigif"
         geometry="primitive: plane; height: 420; width: 298"
+        material="shader: gif; src: url(https://joyce103081.github.io/mathbook_ar_project/hello-gif.gif); transparent: true"
         position="-150 0 -1200"
         rotation="0 0 0"
         visible="false">
