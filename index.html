@@ -30,7 +30,7 @@
           boomigif.setAttribute("visible", false); 
           boomivid.setAttribute("visible", false);
 
-          const helloboomigif= document.createElement("a-entity"); 
+          const helloboomigif= document.createElement(""); 
           helloboomigif.setAttribute("geometry","primitive: plane; height: 298; width: 420");
           helloboomigif.setAttribute("material","shader: gif; src: #gif; transparent: true");
           helloboomigif.setAttribute("position","-150 0 -1200");
@@ -113,15 +113,6 @@
     >
       <a-video id="boomivid" src="#vid" rotation="-90 0 0" position="50 -100 -150" width="210" height="124">
       </a-video>
-      
-      <a-entity
-        id="boomigif"
-        geometry="primitive: plane; height: 298; width: 420"
-        material="shader: gif; src:#gif; transparent: true"
-        visible="false"
-        rotation="-90 0 0"
-        position="50 -100 -150"
-      ></a-entity>
     
     <a-entity camera="far: 3000" position="0 0 0"></a-entity>
   </a-scene>
