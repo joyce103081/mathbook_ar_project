@@ -1,235 +1,236 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>BOOMI AR</title>
-    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
-    <style>
-      .hint-text {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-        pointer-events: none;
-      }
-      .hint-text div {
-        color: white;
-        font-size: 1.5em;
-        text-shadow: 0 0 3px rgb(142, 142, 142) ;
-      }
-      
-      .arjs-loader {
-        height: 100%;
-        width: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        background-color: rgba(0, 0, 0, 0.8);
-        z-index: 9999;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      .arjs-loader div {
-        font-size: 1.5em;
-        color: white;
-        text-shadow: 0 0 3px rgb(142, 142, 142) ;
-      }
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BOOMI AR</title>
 
-      /* 平板（橫向、寬度接近電腦版）顯示優化 */
-       @media screen and (min-width: 768px) and (max-width: 1024px) {
-        body {
-            transform: scale(1.3) translateY(-60px);
-            transform-origin: top center;
-        }
-        canvas, video, .a-canvas {
-            max-width: 100vw;
-            max-height: 100vh;
-            display: block;
-            margin: 0 auto;
-        }
-       }
+  <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
 
-        /* 電腦版顯示優化 */
-       @media screen and (min-width: 1025px){
-        body {
-            transform: scale(1.5) translateY(-80px);
-            transform-origin: top center;
-        }
-        canvas, video, .a-canvas {
-            max-width: 100vw;
-            max-height: 100vh;
-            display: block;
-            margin: 0 auto;
-        }
-       }
-       
-    </style>
-    
-  </head>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
 
-  <body style="margin: 0px; overflow: hidden">
-    
-    <div class="arjs-loader">
-      <div>載入中，請稍等...</div>
-    </div>
-    
-    <!-- 初始提示：鏡頭對著數學作業簿封面會有驚喜喔 -->
-    <div class="hint-text" id="scanHint">
-      <div>鏡頭對著數學作業封面會有驚喜喔！</div>
-    </div>
-    
-    <!-- 提示：點一下畫面開始播放影片 -->
-    <div class="hint-text" id="clickHint" style="display: none">
-      <div>點一下畫面開始播放影片</div>
-    </div>
+    .hint-text {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      pointer-events: none;
+    }
 
-    <!-- 提示：按截圖鍵即可跟 BOOMI 拍照 -->
-    <div class="hint-text" id="photoHint" style="display: none">
-      <div>按截圖鍵即可跟 BOOMI 拍照</div>
-    </div>
+    .hint-text div {
+      color: white;
+      font-size: 1.5em;
+      text-shadow: 0 0 3px rgb(142, 142, 142);
+    }
 
-    <a-scene
-      vr-mode-ui="enabled: false"
-      renderer="antialias: true; alpha: true; precision: mediump"
-      embedded
-      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false"
+    .arjs-loader {
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .arjs-loader div {
+      font-size: 1.5em;
+      color: white;
+      text-shadow: 0 0 3px rgb(142, 142, 142);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="arjs-loader">
+    <div>載入中，請稍等...</div>
+  </div>
+
+  <div class="hint-text" id="scanHint">
+    <div>鏡頭對著數學作業封面會有驚喜喔！</div>
+  </div>
+
+  <div class="hint-text" id="clickHint" style="display: none">
+    <div>點一下畫面開始播放影片</div>
+  </div>
+
+  <div class="hint-text" id="photoHint" style="display: none">
+    <div>按截圖鍵即可跟 BOOMI 拍照</div>
+  </div>
+
+  <a-scene
+    vr-mode-ui="enabled: false"
+    renderer="antialias: true; alpha: true; precision: mediump"
+    embedded
+    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false"
+  >
+    <a-assets>
+      <video
+        id="vid"
+        src="https://joyce103081.github.io/mathbook_ar_project/ALL2.0.mp4"
+        preload="auto"
+        loop="false"
+        crossorigin="anonymous"
+        webkit-playsinline
+        playsinline
+        muted
+      ></video>
+
+      <img
+        id="smile"
+        src="https://joyce103081.github.io/mathbook_ar_project/smile.png"
+        crossorigin="anonymous"
+      />
+    </a-assets>
+
+    <a-nft
+      videohandler
+      type="nft"
+      url="https://joyce103081.github.io/mathbook_ar_project/mathbooktry3"
+      smooth="true"
+      smoothCount="100"
+      smoothTolerance="0.08"
+      smoothThreshold="10"
     >
-      <a-assets>
-        <video
-          id="vid"
-          src="https://joyce103081.github.io/mathbook_ar_project/ALL2.0.mp4"
-          preload="auto"
-          loop="false"
-          crossorigin="anonymous"
-          webkit-playsinline
-          playsinline
-          muted
-        ></video>
+      <a-video
+        id="boomivid"
+        src="#vid"
+        rotation="-90 0 0"
+        position="50 -100 -150"
+        width="210"
+        height="124"
+        visible="false"
+      ></a-video>
 
-        <img
-          id="smile"
-          src="https://joyce103081.github.io/mathbook_ar_project/smile.png"
-          crossorigin="anonymous"
-        />
-      </a-assets>
+      <a-image
+        id="boomismile"
+        src="#smile"
+        rotation="-90 0 0"
+        position="50 -100 -150"
+        width="298"
+        height="420"
+        visible="false"
+      ></a-image>
+    </a-nft>
 
-      <a-nft
-        videohandler
-        type="nft"
-        url="https://joyce103081.github.io/mathbook_ar_project/mathbooktry3"
-        smooth="true"
-        smoothCount="100"
-        smoothTolerance="0.08"
-        smoothThreshold="10"
-      >
-        <a-video
-          id="boomivid"
-          src="#vid"
-          rotation="-90 0 0"
-          position="50 -100 -150"
-          width="210"
-          height="124"
-          visible="false"
-        ></a-video>
+    <a-entity camera="far: 3000" position="0 0 0"></a-entity>
+  </a-scene>
 
-        <a-image
-          id="boomismile"
-          src="#smile"
-          rotation="-90 0 0"
-          position="50 -100 -150"
-          width="298"
-          height="420"
-          visible="false"
-        ></a-image>
-      </a-nft>
+  <script>
+    // 📐 畫面裝置比例調整
+    function adjustViewByDevice() {
+      const scene = document.querySelector("a-scene");
+      const isMobile = /iPhone|Android/i.test(navigator.userAgent);
+      const isTablet = /iPad|Tablet|Nexus 7|Nexus 10/i.test(navigator.userAgent);
+      const isPortrait = window.innerHeight > window.innerWidth;
 
-      <a-entity camera="far: 3000" position="0 0 0"></a-entity>
-    </a-scene>
+      scene.style.transform = "";
+      scene.style.transformOrigin = "";
 
-    <script>
-      window.onload = function () {
-        const scanHint = document.getElementById("scanHint");
-        const clickHint = document.getElementById("clickHint");
-        const photoHint = document.getElementById("photoHint");
+      if (isMobile) {
+        scene.style.transform = "scale(1.1) translateY(-20px)";
+        scene.style.transformOrigin = "top center";
+      } else if (isTablet) {
+        if (isPortrait) {
+          scene.style.transform = "scale(1.3) translateY(-50px) translateX(10px)";
+          scene.style.transformOrigin = "top center";
+        } else {
+          scene.style.transform = "scale(1.4) translateY(-60px)";
+          scene.style.transformOrigin = "top center";
+        }
+      } else {
+        scene.style.transform = "scale(1.5) translateY(-80px)";
+        scene.style.transformOrigin = "top center";
+      }
+    }
 
-        // 一開始全部先隱藏提示
-        scanHint.style.display = "none";
-        clickHint.style.display = "none";
-        photoHint.style.display = "none";
+    window.addEventListener("DOMContentLoaded", () => {
+      adjustViewByDevice();
+    });
 
-        AFRAME.registerComponent("videohandler", {
-          init: function() {
-            var marker = this.el;
-            const vid = document.querySelector("#vid");
-            const boomivid = document.querySelector("#boomivid");
-            const boomismile = document.querySelector("#boomismile");
+    window.addEventListener("resize", () => {
+      adjustViewByDevice();
+    });
 
+    window.onload = function () {
+      const scanHint = document.getElementById("scanHint");
+      const clickHint = document.getElementById("clickHint");
+      const photoHint = document.getElementById("photoHint");
 
+      scanHint.style.display = "none";
+      clickHint.style.display = "none";
+      photoHint.style.display = "none";
 
-            // 載入完成，載入提示消失，掃描提示顯示
-            document.querySelector("a-scene").addEventListener("loaded", () => {
-              document.querySelector(".arjs-loader").style.display = "none";  
-              scanHint.style.display = "flex";
-            });
+      AFRAME.registerComponent("videohandler", {
+        init: function () {
+          var marker = this.el;
+          const vid = document.querySelector("#vid");
+          const boomivid = document.querySelector("#boomivid");
+          const boomismile = document.querySelector("#boomismile");
 
+          document.querySelector("a-scene").addEventListener("loaded", () => {
+            document.querySelector(".arjs-loader").style.display = "none";
+            scanHint.style.display = "flex";
+          });
 
-            // 掃描到 marker，掃描提示消失，點擊提示顯示
-            marker.addEventListener("markerFound", function () {
-              console.log("Marker found");
-              scanHint.style.display = "none";
-              boomivid.setAttribute("visible", true);
-              clickHint.style.display = "flex";
-            });
+          marker.addEventListener("markerFound", function () {
+            console.log("Marker found");
+            scanHint.style.display = "none";
+            boomivid.setAttribute("visible", true);
+            clickHint.style.display = "flex";
+          });
 
-            // marker 消失，點擊提示消失，拍照提示消失
-            marker.addEventListener("markerLost", function () {
-              vid.pause();
-              vid.currentTime = 0;
-              boomivid.setAttribute("visible", false);
-              boomismile.setAttribute("visible", false);
+          marker.addEventListener("markerLost", function () {
+            vid.pause();
+            vid.currentTime = 0;
+            boomivid.setAttribute("visible", false);
+            boomismile.setAttribute("visible", false);
+            clickHint.style.display = "none";
+            photoHint.style.display = "none";
+          });
+
+          document.body.addEventListener("click", function () {
+            if (boomivid.getAttribute("visible") && vid.paused) {
+              vid.muted = false;
+              vid.play();
               clickHint.style.display = "none";
+            }
+          });
+
+          vid.addEventListener("ended", () => {
+            boomivid.setAttribute("visible", false);
+            const boomiImage = document.createElement("a-image");
+            boomiImage.setAttribute("src", "#smile");
+            boomiImage.setAttribute("position", "-150 0 -1200");
+            boomiImage.setAttribute("rotation", "0 0 0");
+            boomiImage.setAttribute("width", "298");
+            boomiImage.setAttribute("height", "420");
+            boomiImage.setAttribute("look-at", "[camera]");
+            document.querySelector("a-scene").appendChild(boomiImage);
+
+            photoHint.style.display = "flex";
+            setTimeout(() => {
               photoHint.style.display = "none";
-            });
-
-            // 點擊播放有聲影片，點擊提示消失，設定取消靜音
-            document.body.addEventListener("click", function () {
-              if (boomivid.getAttribute("visible")&& vid.paused) {
-                vid.muted = false;
-                vid.play();
-                clickHint.style.display = "none";
-              }
-            });
-
-            // 影片播放完畢，顯示 BOOMI 圖片
-            vid.addEventListener("ended", () => {
-              boomivid.setAttribute("visible", false);
-              const boomiImage = document.createElement("a-image");
-              boomiImage.setAttribute("src", "#smile");
-              boomiImage.setAttribute("position", "-150 0 -1200");
-              boomiImage.setAttribute("rotation", "0 0 0");
-              boomiImage.setAttribute("width", "298");
-              boomiImage.setAttribute("height", "420");
-              boomiImage.setAttribute("look-at", "[camera]");
-              document.querySelector("a-scene").appendChild(boomiImage);
-
-              // 顯示拍照提示
-              photoHint.style.display = "flex";
-
-              // 10 秒後隱藏提示
-              setTimeout(() => {
-                photoHint.style.display = "none";
-              }, 10000);
-            });
-          },
-        });
-      };
-    </script>
-  </body>
+            }, 10000);
+          });
+        },
+      });
+    };
+  </script>
+</body>
 </html>
