@@ -6,6 +6,8 @@
     <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
     <style>
+      
+      
       .arjs-loader, .hint-text {
         position: absolute;
         top: 0;
@@ -20,13 +22,28 @@
       }
       .hint-text div {
         color: white;
-        font-size: 1.5em;
-        text-shadow: 0 0 5px black;
+        font-size: 1.25em;
       }
+
+      .arjs-loader div {
+        text-align: center;
+        font-size: 1.25em;
+        color: white;
+      }
+
+
+
+  
     </style>
+    
   </head>
 
   <body style="margin: 0px; overflow: hidden">
+    
+    <div class="arjs-loader">
+      <div>載入中，請稍等...</div>
+    </div>
+    
     <!-- 初始提示：鏡頭對著數學作業簿封面會有驚喜喔 -->
     <div class="hint-text" id="scanHint">
       <div>鏡頭對著數學作業籤封會有驚喜喔！</div>
@@ -112,7 +129,13 @@
             const clickHint = document.getElementById("clickHint");
             const photoHint = document.getElementById("photoHint");
 
-            // 掃描到 marker
+            // 載入完成，載入提示消失，掃描提示顯示
+            document.querySelector("a-scene").addEventListener("loaded", () => {
+              document.querySelector(".arjs-loader").style.display = "none";
+              scanHint.style.display = "block";
+            });
+
+            // 掃描到 marker，掃描提示消失，點擊提示顯示
             marker.addEventListener("markerFound", function () {
               console.log("Marker found");
               scanHint.style.display = "none";
@@ -120,7 +143,7 @@
               clickHint.style.display = "flex";
             });
 
-            // marker 消失
+            // marker 消失，點擊提示消失，拍照提示消失
             marker.addEventListener("markerLost", function () {
               vid.pause();
               vid.currentTime = 0;
@@ -130,20 +153,30 @@
               photoHint.style.display = "none";
             });
 
-            // 點擊播放有聲影片
+            // 點擊播放有聲影片，點擊提示消失，設定取消靜音
             document.body.addEventListener("click", function () {
-              if (boomivid.getAttribute("visible")) {
+              if (boomivid.getAttribute("visible")&& vid.paused) {
                 vid.muted = false;
                 vid.play();
                 clickHint.style.display = "none";
               }
             });
 
-            // 影片播放完畢 → 顯示拍照提示
-            vid.addEventListener("ended", function () {
+            // 影片播放完畢，顯示 BOOMI 圖片
+            vid.addEventListener("ended", () => {
               boomivid.setAttribute("visible", false);
-              boomismile.setAttribute("visible", true);
-              photoHint.style.display = "flex";
+              const boomiImage = document.createElement("a-image");
+              boomiImage.setAttribute("src", "#smile");
+              boomiImage.setAttribute("position", "-150 0 -1200");
+              boomiImage.setAttribute("rotation", "0 0 0");
+              boomiImage.setAttribute("width", "298");
+              boomiImage.setAttribute("height", "420");
+              boomiImage.setAttribute("look-at", "[camera]");
+              document.querySelector("a-scene").appendChild(boomiImage);
+
+              // 顯示拍照提示
+              photoHint.style.display = "block";
+
               // 10 秒後隱藏提示
               setTimeout(() => {
                 photoHint.style.display = "none";
