@@ -10,16 +10,6 @@
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
 
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background-color: black;
-      font-family: sans-serif;
-    }
-
     .menu, .video-mode, .photo-mode {
       position: absolute;
       top: 0;
@@ -96,10 +86,35 @@
     <div class="video-overlay" id="videoOverlay">
       <p>請將鏡頭對著數學作業簿掃描觀看影片</p>
     </div>
-    <video id="videoPlayer" src="https://joyce103081.github.io/mathbook_ar_project/ALL2.0.mp4" playsinline muted loop style="width: 100%; height: 100%; object-fit: cover; display: none;"></video>
-    <img src="https://joyce103081.github.io/mathbook_ar_project/frame.png" class="frame-img" id="frameImage" style="display: none;">
-    <button id="blueBtn" onclick="playVideo()" style="display: none; position: absolute; bottom: 20%;">▶️ 觀看</button>
-    <button id="orangeBtn" onclick="backToMenu()" style="display: none; position: absolute; top: 5%; right: 5%;">⬅️ 返回</button>
+
+    <video 
+    id="videoPlayer" 
+    src="https://joyce103081.github.io/mathbook_ar_project/ALL2.0.mp4" 
+    playsinline 
+    muted 
+    loop 
+    style="width: 100%; height: 100%; object-fit: cover; display: none;"
+    ></video>
+
+    <img 
+      src="https://joyce103081.github.io/mathbook_ar_project/frame.png" 
+      class="frame-img" 
+      id="frameImage" 
+      style="display: none;">
+
+      
+    <button 
+      id="blueBtn" 
+      onclick="playVideo()" 
+      style="display: none; position: absolute; bottom: 20%;">▶️ 觀看
+    </button>
+
+    <button 
+      id="orangeBtn" 
+      onclick="backToMenu()" 
+      style="display: none; position: absolute; top: 5%; right: 5%;">⬅️ 返回
+    </button>
+    
   </div>
 
   <div class="photo-mode" id="photoMode">
@@ -108,24 +123,85 @@
       <p>這裡是一個可以跟BOOMI合照的地方</p>
       <p>點擊畫面開始拍照</p>
     </div>
-    <img src="https://joyce103081.github.io/mathbook_ar_project/smile.png" class="boomi-img" id="boomiImage" style="display: none;">
-    <button id="shutterBtn" style="display: none; position: absolute; bottom: 10%;">📸 快門</button>
-    <button onclick="backToMenu()" style="display: none; position: absolute; top: 5%; right: 5%; background-color: #ff6600;">⬅️ 返回</button>
+    
+
+    <img 
+      src="https://joyce103081.github.io/mathbook_ar_project/smile.png" 
+      class="boomi-img" 
+      id="boomiImage" 
+      style="display: none;">
+
+    <button 
+      id="shutterBtn" 
+      style="display: none; position: absolute; bottom: 10%;">📸 快門
+    </button>
+
+    <button 
+      onclick="backToMenu()" 
+      style="display: none; position: absolute; top: 5%; right: 5%; background-color: #ff6600;">⬅️ 返回
+    </button>
+
   </div>
 
-  <a-scene embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false">
+
+  <a-scene 
+    embedded 
+    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false"
+    renderer="antialias: true; alpha: true; precision: mediump"
+  >
+
     <a-assets>
-      <video id="vid" src="https://joyce103081.github.io/mathbook_ar_project/ALL2.0.mp4" preload="auto" loop="false" crossorigin="anonymous" webkit-playsinline playsinline muted></video>
-      <img id="smile" src="https://joyce103081.github.io/mathbook_ar_project/smile.png" crossorigin="anonymous" />
+      <video 
+        id="vid" 
+        src="https://joyce103081.github.io/mathbook_ar_project/ALL2.0.mp4" 
+        preload="auto" 
+        loop="false" 
+        crossorigin="anonymous" 
+        webkit-playsinline 
+        playsinline muted
+      ></video>
+
+      <img 
+        id="smile" 
+        src="https://joyce103081.github.io/mathbook_ar_project/smile.png" 
+        crossorigin="anonymous" />
+
     </a-assets>
 
-    <a-nft videohandler type="nft" url="https://joyce103081.github.io/mathbook_ar_project/mathbooktry3" smooth="true" smoothCount="100" smoothTolerance="0.08" smoothThreshold="10">
-      <a-video id="boomivid" src="#vid" position="0 0 -2" width="2.1" height="1.2" visible="false" look-at="[camera]"></a-video>
-      <a-image id="boomismile" src="#smile" position="0 0 -2" width="2.98" height="4.2" visible="false" look-at="[camera]"></a-image>
+    <a-nft 
+      videohandler 
+      type="nft" 
+      url="https://joyce103081.github.io/mathbook_ar_project/mathbooktry3" 
+      smooth="true" 
+      smoothCount="100" 
+      smoothTolerance="0.08" 
+      smoothThreshold="10">
+      
+      <a-video 
+        id="boomivid" 
+        src="#vid" 
+        position="0 0 -2" 
+        width="2.1" 
+        height="1.2" 
+        visible="false" 
+        look-at="[camera]"
+        ></a-video>
+
+      <a-image 
+        id="boomismile" 
+        src="#smile" 
+        position="0 0 -2" 
+        width="2.98" 
+        eight="4.2" 
+        visible="false" 
+        look-at="[camera]"
+        ></a-image>
     </a-nft>
 
     <a-entity camera></a-entity>
+
   </a-scene>
+
 
   <script>
     window.onload = () => {
