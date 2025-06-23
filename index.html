@@ -4,8 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>BOOMI AR 大進化</title>
-  <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/ar.js@3.4.2/aframe/build/aframe-ar.min.js"></script>
+
+  <!-- A-Frame 與 AR.js 套件 -->
+  <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.2/dist/aframe.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+
   <style>
     html, body {
       margin: 0;
@@ -84,24 +87,21 @@
   </style>
 </head>
 <body>
-  <!-- 選單 -->
   <div class="menu" id="menu">
     <button onclick="enterVideoMode()">🎬 觀看介紹影片</button>
     <button onclick="enterPhotoMode()">📸 拍照互動模式</button>
   </div>
 
-  <!-- 影片模式介面 -->
   <div class="video-mode" id="videoMode">
     <div class="video-overlay" id="videoOverlay">
       <p>請將鏡頭對著數學作業簿掃描觀看影片</p>
     </div>
-    <video id="videoPlayer" src="https://joyce103081.github.io/mathbook_ar_project/ALL0623-1.mp4" playsinline muted loop style="width: 100%; height: 100%; object-fit: cover; display: none;"></video>
+    <video id="videoPlayer" src="https://joyce103081.github.io/mathbook_ar_project/ALL2.0.mp4" playsinline muted loop style="width: 100%; height: 100%; object-fit: cover; display: none;"></video>
     <img src="https://joyce103081.github.io/mathbook_ar_project/frame.png" class="frame-img" id="frameImage" style="display: none;">
     <button id="blueBtn" onclick="playVideo()" style="display: none; position: absolute; bottom: 20%;">▶️ 觀看</button>
     <button id="orangeBtn" onclick="backToMenu()" style="display: none; position: absolute; top: 5%; right: 5%;">⬅️ 返回</button>
   </div>
 
-  <!-- 拍照模式介面 -->
   <div class="photo-mode" id="photoMode">
     <div class="photo-overlay" id="photoOverlay">
       <p>歡迎來到BOOMI互動區</p>
@@ -113,15 +113,55 @@
     <button onclick="backToMenu()" style="display: none; position: absolute; top: 5%; right: 5%; background-color: #ff6600;">⬅️ 返回</button>
   </div>
 
-  <!-- AR.js 場景，只用於開啟鏡頭與啟用追蹤 -->
   <a-scene embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false">
-    <a-marker-camera preset="custom"></a-marker-camera>
+    <a-assets>
+      <video id="vid" src="https://joyce103081.github.io/mathbook_ar_project/ALL2.0.mp4" preload="auto" loop="false" crossorigin="anonymous" webkit-playsinline playsinline muted></video>
+      <img id="smile" src="https://joyce103081.github.io/mathbook_ar_project/smile.png" crossorigin="anonymous" />
+    </a-assets>
+
+    <a-nft videohandler type="nft" url="https://joyce103081.github.io/mathbook_ar_project/mathbooktry3" smooth="true" smoothCount="100" smoothTolerance="0.08" smoothThreshold="10">
+      <a-video id="boomivid" src="#vid" position="0 0 -2" width="2.1" height="1.2" visible="false" look-at="[camera]"></a-video>
+      <a-image id="boomismile" src="#smile" position="0 0 -2" width="2.98" height="4.2" visible="false" look-at="[camera]"></a-image>
+    </a-nft>
+
+    <a-entity camera></a-entity>
   </a-scene>
 
   <script>
-    // 一開始顯示主選單
     window.onload = () => {
       document.getElementById("menu").style.display = "flex";
+
+      AFRAME.registerComponent("videohandler", {
+        init: function () {
+          var marker = this.el;
+          const vid = document.querySelector("#vid");
+          const boomivid = document.querySelector("#boomivid");
+          const boomismile = document.querySelector("#boomismile");
+
+          marker.addEventListener("markerFound", function () {
+            boomivid.setAttribute("visible", true);
+          });
+
+          marker.addEventListener("markerLost", function () {
+            vid.pause();
+            vid.currentTime = 0;
+            boomivid.setAttribute("visible", false);
+            boomismile.setAttribute("visible", false);
+          });
+
+          document.body.addEventListener("click", function () {
+            if (boomivid.getAttribute("visible") && vid.paused) {
+              vid.muted = false;
+              vid.play();
+            }
+          });
+
+          vid.addEventListener("ended", () => {
+            boomivid.setAttribute("visible", false);
+            boomismile.setAttribute("visible", true);
+          });
+        }
+      });
     };
 
     function enterVideoMode() {
@@ -134,14 +174,15 @@
         document.getElementById("blueBtn").style.display = "block";
         document.getElementById("orangeBtn").style.display = "block";
         document.getElementById("frameImage").style.display = "block";
-      }, 3000); // 模擬掃描流程後出現UI
+      }, 3000);
     }
 
     function playVideo() {
       document.getElementById("videoOverlay").style.display = "none";
-      document.getElementById("videoPlayer").style.display = "block";
-      document.getElementById("videoPlayer").muted = false;
-      document.getElementById("videoPlayer").play();
+      const player = document.getElementById("videoPlayer");
+      player.style.display = "block";
+      player.muted = false;
+      player.play();
     }
 
     function enterPhotoMode() {
@@ -157,13 +198,11 @@
     }
 
     function backToMenu() {
-      // 停止影片並重設
       const vid = document.getElementById("videoPlayer");
       vid.pause();
       vid.currentTime = 0;
       vid.style.display = "none";
 
-      // 隱藏所有元素
       ["videoMode", "photoMode"].forEach(id => document.getElementById(id).style.display = "none");
       ["blueBtn", "orangeBtn", "frameImage", "boomiImage", "shutterBtn"].forEach(id => document.getElementById(id).style.display = "none");
       document.getElementById("videoOverlay").innerHTML = '<p>請將鏡頭對著數學作業簿掃描觀看影片</p>';
