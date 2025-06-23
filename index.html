@@ -130,21 +130,27 @@
 
     <script>
       window.onload = function () {
+        const scanHint = document.getElementById("scanHint");
+        const clickHint = document.getElementById("clickHint");
+        const photoHint = document.getElementById("photoHint");
+
+        // 一開始全部先隱藏提示
+        scanHint.style.display = "none";
+        clickHint.style.display = "none";
+        photoHint.style.display = "none";
+
         AFRAME.registerComponent("videohandler", {
           init: function() {
             var marker = this.el;
             const vid = document.querySelector("#vid");
             const boomivid = document.querySelector("#boomivid");
             const boomismile = document.querySelector("#boomismile");
-            const scanHint = document.getElementById("scanHint");
-            const clickHint = document.getElementById("clickHint");
-            const photoHint = document.getElementById("photoHint");
 
-            document.querySelector(".arjs-loader").style.display = "flex";
+
 
             // 載入完成，載入提示消失，掃描提示顯示
             document.querySelector("a-scene").addEventListener("loaded", () => {
-              document.querySelector(".arjs-loader").style.display = "none";
+              document.querySelector(".arjs-loader").style.display = "none";  
               scanHint.style.display = "flex";
             });
 
