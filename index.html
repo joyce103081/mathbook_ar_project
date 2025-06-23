@@ -42,9 +42,19 @@
         text-shadow: 0 0 3px rgb(142, 142, 142) ;
       }
 
-
-
-  
+       @media screen and (min-width: 768px) and (max-width: 1024px) {
+         a-scene {
+            transform: scale(1.2) translateY(-50px);
+            transform-origin: top center;
+        }
+       }
+       
+       @media screen and (min-width: 1025px) {
+         a-scene {
+            transform: scale(1.5) translateY(-80px);
+            transform-origin: top center;
+        }
+       }
     </style>
     
   </head>
@@ -129,6 +139,19 @@
     </a-scene>
 
     <script>
+       window.addEventListener('DOMContentLoaded', () => {
+        const isTablet = /iPad|Android|Tablet/i.test(navigator.userAgent);
+        
+        if (isTablet && window.innerWidth > 768) {
+        // 桌面模式的平板裝置，調整畫面比例
+            const scene = document.querySelector("a-scene");
+            scene.style.transform = "scale(1.3) translateY(-60px)";
+            scene.style.transformOrigin = "top center";
+        }
+       });
+
+
+
       window.onload = function () {
         const scanHint = document.getElementById("scanHint");
         const clickHint = document.getElementById("clickHint");
