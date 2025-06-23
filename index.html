@@ -138,6 +138,7 @@
       const isMobile = /iPhone|Android/i.test(navigator.userAgent);
       const isTablet = /iPad|Tablet|Nexus 7|Nexus 10/i.test(navigator.userAgent);
       const isPortrait = window.innerHeight > window.innerWidth;
+      const isDesktop = !isMobile && !isTablet;
       
 
       scene.style.transform = "";
@@ -154,9 +155,14 @@
           scene.style.transform = "scale(1.4) translateY(-50px) translateX(100px) translateZ(-500px)";
           scene.style.transformOrigin = "top center";
         }
-      } else {
-        scene.style.transform = "scale(1.5) translateY(-300px)  translateX(200px) translateZ(-500px)";
-        scene.style.transformOrigin = "top center";
+      } else if (isDesktop) {
+        if (isPortrait) {
+            scene.style.transform = "scale(1.4) translateY(-300px)  translateX(200px) translateZ(-500px)";
+            scene.style.transformOrigin = "top center";
+        }else {
+            scene.style.transform = "scale(1.5) translateY(-300px)  translateX(200px) translateZ(-500px)";
+            scene.style.transformOrigin = "top center";
+        }
       }
     }
 
