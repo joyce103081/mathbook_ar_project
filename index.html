@@ -134,10 +134,10 @@
         }
       } else if (isDesktop) {
         if (isPortrait) {
-            scene.style.transform = "scale(1.4) translateY(-200px)  translateX(300px) translateZ(-900px)";
+            scene.style.transform = "scale(1.4) translateY(-200px)  translateX(300px) translateZ(-1000px)";
             scene.style.transformOrigin = "top center";
         }else {
-            scene.style.transform = "scale(1.5)  translateX(200px) translateZ(-900px)";
+            scene.style.transform = "scale(1.6) translateY(-200px) translateX(200px) translateZ(-700px)";
             scene.style.transformOrigin = "top center";
         }
       }
@@ -209,10 +209,10 @@
               boomiImage.setAttribute("position", "-150 0 -1200");
             } else if (screenWidth < 1025) {
               // 平板(直:橫)
-              boomiImage.setAttribute("position", isPortrait ? "-250 0 -1200" : "-300 0 -1000");
+              boomiImage.setAttribute("position", isPortrait ? "-450 0 -1200" : "-300 0 -1000");
             } else {
               // 桌機(直:橫)
-              boomiImage.setAttribute("position", isPortrait ? "-300 100 -1300" : "-350 200 -1200");
+              boomiImage.setAttribute("position", isPortrait ? "-500 100 -1300" : "-150 100 -1200");
             }
 
             boomiImage.setAttribute("rotation", "0 0 0");
