@@ -57,7 +57,7 @@
     
     <!-- 初始提示：鏡頭對著數學作業簿封面會有驚喜喔 -->
     <div class="hint-text" id="scanHint">
-      <div>鏡頭對著數學作業籤封會有驚喜喔！</div>
+      <div>鏡頭對著數學作業封面會有驚喜喔！</div>
     </div>
     
     <!-- 提示：點一下畫面開始播放影片 -->
@@ -131,7 +131,7 @@
     <script>
       window.onload = function () {
         AFRAME.registerComponent("videohandler", {
-          init: function () {
+          init: function() {
             var marker = this.el;
             const vid = document.querySelector("#vid");
             const boomivid = document.querySelector("#boomivid");
@@ -140,11 +140,14 @@
             const clickHint = document.getElementById("clickHint");
             const photoHint = document.getElementById("photoHint");
 
+            document.querySelector(".arjs-loader").style.display = "flex";
+
             // 載入完成，載入提示消失，掃描提示顯示
             document.querySelector("a-scene").addEventListener("loaded", () => {
               document.querySelector(".arjs-loader").style.display = "none";
               scanHint.style.display = "flex";
             });
+
 
             // 掃描到 marker，掃描提示消失，點擊提示顯示
             marker.addEventListener("markerFound", function () {
