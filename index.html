@@ -34,31 +34,12 @@
       font-size: 1.5em;
       text-shadow: 0 0 3px rgb(142, 142, 142);
     }
-
-     #shutterBtn, #restartBtn {
-      position: absolute;
-      width: 100px;
-      height: 30px;
-      font-size: 1em;
-      border-radius: 5px;
-      color: white;
-      background-color: rgba(85, 85, 85, 0.8);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      top: 0;
-      left: 0;
-
-    }
-    #restartBtn {
-      bottom: 100px;
-    }
   </style>
 </head>
 
 <body>
 <!-- 提示文字區 -->
-  <div class="hint-text" id="scanHint" style="display: flex">
+  <div class="hint-text" id="scanHint">
     <div>鏡頭對著數學作業封面會有驚喜喔！</div>
   </div>
 
@@ -70,11 +51,7 @@
     <div>按截圖鍵即可跟 BOOMI 拍照</div>
   </div>
 
-
-<!-- 拍照與重啟按鈕 -->
-  <button id="shutterBtn">📸 拍照</button>
-  <button id="restartBtn">🎬 影片</button>
-
+  
   <a-scene
     vr-mode-ui="enabled: false"
     renderer="antialias: true; alpha: true; precision: mediump"
@@ -84,7 +61,7 @@
     <a-assets>
       <video
         id="vid"
-        src="https://joyce103081.github.io/mathbook_ar_project/ALL2.0.mp4"
+        src="https://joyce103081.github.io/mathbook_ar_project/ALL0623-1.mp4"
         preload="auto"
         loop="false"
         crossorigin="anonymous"
@@ -237,7 +214,7 @@
               boomiImage.setAttribute("position", isPortrait ? "-450 0 -1200" : "-300 0 -1000");
             } else {
               // 桌機(直:橫)
-              boomiImage.setAttribute("position", isPortrait ? "-350 100 -1300" : "-150 100 -1200");
+              boomiImage.setAttribute("position", isPortrait ? "-400 100 -1300" : "-150 100 -1200");
             }
 
             boomiImage.setAttribute("rotation", "0 0 0");
