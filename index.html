@@ -22,13 +22,14 @@
       }
       .hint-text div {
         color: white;
-        font-size: 1.25em;
+        font-size: 1.5em;
+        text-shadow: 0 0 3px rgb(142, 142, 142) ;
       }
 
       .arjs-loader div {
-        text-align: center;
-        font-size: 1.25em;
+        font-size: 1.5em;
         color: white;
+        text-shadow: 0 0 3px rgb(142, 142, 142) ;
       }
 
 
@@ -132,7 +133,7 @@
             // 載入完成，載入提示消失，掃描提示顯示
             document.querySelector("a-scene").addEventListener("loaded", () => {
               document.querySelector(".arjs-loader").style.display = "none";
-              scanHint.style.display = "block";
+              scanHint.style.display = "flex";
             });
 
             // 掃描到 marker，掃描提示消失，點擊提示顯示
@@ -175,7 +176,7 @@
               document.querySelector("a-scene").appendChild(boomiImage);
 
               // 顯示拍照提示
-              photoHint.style.display = "block";
+              photoHint.style.display = "flex";
 
               // 10 秒後隱藏提示
               setTimeout(() => {
