@@ -1,53 +1,157 @@
-<script>
-  window.onload = function () {
-    AFRAME.registerComponent("videohandler", {
-      init: function () {
-        const marker = this.el;
-        const vid = document.querySelector("#vid");
-        const boomismile = document.querySelector("#boomismile");
-        const boomivid = document.querySelector("#boomivid");
-
-        let isUserInteracted = false;
-
-        // 使用者點擊才允許聲音
-        document.body.addEventListener("click", () => {
-          isUserInteracted = true;
-          vid.muted = false;
-          vid.play().then(() => {
-            console.log("🔊 手動互動後已播放影片");
-          }).catch(e => console.warn("播放失敗：", e));
-        });
-
-        marker.addEventListener("markerFound", function () {
-          console.log("🎯 Marker Found!");
-          if (isUserInteracted) {
-            vid.muted = false;
-          }
-          vid.play().catch(e => {
-            console.warn("🔇 尚未互動無法播放有聲影片：", e);
-          });
-        });
-
-        marker.addEventListener("markerLost", function () {
-          vid.pause();
-          vid.currentTime = 0;
-        });
-
-        vid.addEventListener("ended", function () {
-          console.log("✅ 影片結束，顯示圖片");
-          boomismile.setAttribute("visible", false);
-          boomivid.setAttribute("visible", false);
-
-          const helloboomismile = document.createElement("a-image");
-          helloboomismile.setAttribute("src", "#smile");
-          helloboomismile.setAttribute("position", "-150 0 -1200");
-          helloboomismile.setAttribute("rotation", "0 0 0");
-          helloboomismile.setAttribute("width", "298");
-          helloboomismile.setAttribute("height", "420");
-          helloboomismile.setAttribute("look-at", "[camera]");
-          document.querySelector("a-scene").appendChild(helloboomismile);
-        });
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>BOOMI AR</title>
+    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+    <style>
+      .arjs-loader, .hint-text {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        pointer-events: none;
       }
-    });
-  };
-</script>
+      .hint-text div {
+        color: white;
+        font-size: 1.5em;
+        text-shadow: 0 0 5px black;
+      }
+    </style>
+  </head>
+
+  <body style="margin: 0px; overflow: hidden">
+    <!-- 初始提示：鏡頭對著數學作業簿封面會有驚喜喔 -->
+    <div class="hint-text" id="scanHint">
+      <div>鏡頭對著數學作業籤封會有驚喜喔！</div>
+    </div>
+    
+    <!-- 提示：點一下畫面開始播放影片 -->
+    <div class="hint-text" id="clickHint" style="display: none">
+      <div>點一下畫面開始播放影片</div>
+    </div>
+
+    <!-- 提示：按截圖鍵即可跟 BOOMI 拍照 -->
+    <div class="hint-text" id="photoHint" style="display: none">
+      <div>按截圖鍵即可跟 BOOMI 拍照</div>
+    </div>
+
+    <a-scene
+      vr-mode-ui="enabled: false"
+      renderer="antialias: true; alpha: true; precision: mediump"
+      embedded
+      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false"
+    >
+      <a-assets>
+        <video
+          id="vid"
+          src="https://joyce103081.github.io/mathbook_ar_project/ALL2.0.mp4"
+          preload="auto"
+          loop="false"
+          crossorigin="anonymous"
+          webkit-playsinline
+          playsinline
+          muted
+        ></video>
+
+        <img
+          id="smile"
+          src="https://joyce103081.github.io/mathbook_ar_project/smile.png"
+          crossorigin="anonymous"
+        />
+      </a-assets>
+
+      <a-nft
+        videohandler
+        type="nft"
+        url="https://joyce103081.github.io/mathbook_ar_project/mathbooktry3"
+        smooth="true"
+        smoothCount="100"
+        smoothTolerance="0.08"
+        smoothThreshold="10"
+      >
+        <a-video
+          id="boomivid"
+          src="#vid"
+          rotation="-90 0 0"
+          position="50 -100 -150"
+          width="210"
+          height="124"
+          visible="false"
+        ></a-video>
+
+        <a-image
+          id="boomismile"
+          src="#smile"
+          rotation="-90 0 0"
+          position="50 -100 -150"
+          width="298"
+          height="420"
+          visible="false"
+        ></a-image>
+      </a-nft>
+
+      <a-entity camera="far: 3000" position="0 0 0"></a-entity>
+    </a-scene>
+
+    <script>
+      window.onload = function () {
+        AFRAME.registerComponent("videohandler", {
+          init: function () {
+            var marker = this.el;
+            const vid = document.querySelector("#vid");
+            const boomivid = document.querySelector("#boomivid");
+            const boomismile = document.querySelector("#boomismile");
+            const scanHint = document.getElementById("scanHint");
+            const clickHint = document.getElementById("clickHint");
+            const photoHint = document.getElementById("photoHint");
+
+            // 掃描到 marker
+            marker.addEventListener("markerFound", function () {
+              console.log("Marker found");
+              scanHint.style.display = "none";
+              boomivid.setAttribute("visible", true);
+              clickHint.style.display = "flex";
+            });
+
+            // marker 消失
+            marker.addEventListener("markerLost", function () {
+              vid.pause();
+              vid.currentTime = 0;
+              boomivid.setAttribute("visible", false);
+              boomismile.setAttribute("visible", false);
+              clickHint.style.display = "none";
+              photoHint.style.display = "none";
+            });
+
+            // 點擊播放有聲影片
+            document.body.addEventListener("click", function () {
+              if (boomivid.getAttribute("visible")) {
+                vid.muted = false;
+                vid.play();
+                clickHint.style.display = "none";
+              }
+            });
+
+            // 影片播放完畢 → 顯示拍照提示
+            vid.addEventListener("ended", function () {
+              boomivid.setAttribute("visible", false);
+              boomismile.setAttribute("visible", true);
+              photoHint.style.display = "flex";
+              // 10 秒後隱藏提示
+              setTimeout(() => {
+                photoHint.style.display = "none";
+              }, 10000);
+            });
+          },
+        });
+      };
+    </script>
+  </body>
+</html>
