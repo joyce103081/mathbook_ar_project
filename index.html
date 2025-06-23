@@ -33,39 +33,16 @@
       font-size: 1.5em;
       text-shadow: 0 0 3px rgb(142, 142, 142);
     }
-
-    .arjs-loader {
-      height: 100%;
-      width: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      background-color: rgba(0, 0, 0, 0.8);
-      z-index: 9999;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .arjs-loader div {
-      font-size: 1.5em;
-      color: white;
-      text-shadow: 0 0 3px rgb(142, 142, 142);
-    }
   </style>
 </head>
 
 <body>
 
-  <div class="arjs-loader">
-    <div>載入中，請稍等...</div>
-  </div>
-
   <div class="hint-text" id="scanHint">
     <div>鏡頭對著數學作業封面會有驚喜喔！</div>
   </div>
 
-  <div class="hint-text" id="clickHint" style="display: none">
+  <div class="hint-text" id="clickHint" style="display: flex">
     <div>點一下畫面開始播放影片</div>
   </div>
 
@@ -145,7 +122,7 @@
       scene.style.transformOrigin = "";
 
       if (isMobile) {
-        scene.style.transform = "scale(1.1) translateY(-20px)";
+        scene.style.transform = "scale(1) translateY(-20px) translateX(10px)";
         scene.style.transformOrigin = "top center";
       } else if (isTablet) {
         if (isPortrait) {
@@ -191,7 +168,6 @@
           const boomismile = document.querySelector("#boomismile");
 
           document.querySelector("a-scene").addEventListener("loaded", () => {
-            document.querySelector(".arjs-loader").style.display = "none";
             scanHint.style.display = "flex";
           });
 
@@ -223,6 +199,23 @@
             boomivid.setAttribute("visible", false);
             const boomiImage = document.createElement("a-image");
             boomiImage.setAttribute("src", "#smile");
+
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            const isPortrait = screenHeight > screenWidth;
+
+            if (screenWidth < 768) {
+              // 手機
+              boomiImage.setAttribute("position", "-150 0 -1200");
+            } else if (screenWidth < 1025) {
+              // 平板(直:橫)
+              boomiImage.setAttribute("position", isPortrait ? "-150 0 -1200" : "-150 0 -1000");
+            } else {
+              // 桌機(直:橫)
+              boomiImage.setAttribute("position", isPortrait ? "-200 0 -1300" : "-150 0 -1200");
+            }
+
+
             boomiImage.setAttribute("position", "-150 0 -1200");
             boomiImage.setAttribute("rotation", "0 0 0");
             boomiImage.setAttribute("width", "298");
