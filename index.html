@@ -87,6 +87,17 @@
     arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false"
   >
     <a-assets>
+      <video
+        id="vid"
+        src="https://joyce103081.github.io/mathbook_ar_project/ALL0623-1.mp4"
+        preload="auto"
+        loop="false"
+        crossorigin="anonymous"
+        webkit-playsinline
+        playsinline
+        muted
+      ></video>
+  
       <img
         id="smile"
         src="https://joyce103081.github.io/mathbook_ar_project/smile.png"
@@ -103,6 +114,15 @@
       smoothTolerance="0.08"
       smoothThreshold="10"
     >
+      <a-video
+        id="boomivid"
+        src="#vid"
+        rotation="-90 0 0"
+        position="50 -100 -150"
+        width="210"
+        height="124"
+        visible="false"
+      ></a-video>  =
 
       <a-image
         id="boomismile"
@@ -174,7 +194,7 @@
       AFRAME.registerComponent("videohandler", {
         init: function () {
           var marker = this.el;
-          const vid = document.getElementById("boomivid");
+          const vid = document.querySelector("#vid");
           const boomivid = document.querySelector("#boomivid");
           const boomigameboy = document.querySelector("#boomigameboy");
           const boomismile = document.querySelector("#boomismile");
