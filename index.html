@@ -35,6 +35,22 @@
       font-size: 1.5em;
       text-shadow: 0 0 3px rgb(142, 142, 142);
     }
+    
+    #skipBtn{
+      position: absolute;
+      bottom: 10%;
+      right: 5%;
+      padding: 10px 20px;
+      font-size: 1.2em;
+      background-color: rgba(16, 16, 16, 0.85);
+      color: rgb(255, 255, 255);
+      border: none;
+      border-radius: 8px;
+      z-index: 9999;
+      display: none;
+      cursor: pointer;
+    }
+
   </style>
 </head>
 
@@ -52,8 +68,12 @@
   </div>
 
   <div class="hint-text" id="photoHint" style="display: none">
+    <div>放下手中的數學作業簿</div>
+    <div>和BOOMI合照吧</div>
     <div>按 螢幕截圖鍵 即可跟 BOOMI 拍照</div>
   </div>
+
+  <button id="skipBtn">⏩跳過</button>
   
   <a-scene
     vr-mode-ui="enabled: false"
@@ -171,6 +191,7 @@
           const vid = document.querySelector("#vid");
           const boomivid = document.querySelector("#boomivid");
           const boomismile = document.querySelector("#boomismile");
+          const skipBtn = document.getElementById("skipBtn");
 
           document.querySelector("a-scene").addEventListener("loaded", () => {
             scanHint.style.display = "flex";
@@ -197,11 +218,20 @@
               vid.muted = false;
               vid.play();
               clickHint.style.display = "none";
+              skipBtn.style.display = "block"; 
             }
+          });
+
+          skipBtn.addEventListener("click", function (e) {
+            e.stopPropagation(); // 防止觸發播放事件
+            if (!vid.ended) {
+               vid.currentTime = Math.min(vid.duration, vid.currentTime + 30); // 快轉 10 秒
+               }
           });
 
           vid.addEventListener("ended", () => {
             boomivid.setAttribute("visible", false);
+            skipBtn.style.display = "none";
             const boomiImage = document.createElement("a-image");
             boomiImage.setAttribute("src", "#smile");
 
