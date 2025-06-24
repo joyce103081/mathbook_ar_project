@@ -6,8 +6,8 @@
   <title>BOOMI AR</title>
 
   <!-- A-Frame 與 AR.js 套件 -->
-  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
 
   <style>
     html, body {
@@ -34,34 +34,24 @@
       font-size: 1.5em;
       text-shadow: 0 0 3px rgb(142, 142, 142);
     }
-
-    #boomigameboy, #vid {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      object-fit: contain;
-      z-index: 9998;
-      pointer-events: none;
-      display: none;
-    }
   </style>
 </head>
 
 <body>
+<!-- 提示文字區 -->
+  <div class="hint-text" id="scanHint">
+    <div>鏡頭對著數學作業封面會有驚喜喔！</div>
+  </div>
 
-  <!-- 提示文字區 -->
-  <div class="hint-text" id="scanHint"><div>鏡頭對著數學作業封面會有驚喜喔！</div></div>
-  <div class="hint-text" id="clickHint"><div>點一下畫面開始播放影片</div></div>
-  <div class="hint-text" id="photoHint" style="display: none;"><div>按截圖鍵即可跟 BOOMI 拍照</div></div>
+  <div class="hint-text" id="clickHint" style="display: flex">
+    <div>點一下畫面開始播放影片</div>
+  </div>
 
-  <!-- 疊加影像與影片 -->
-  <img id="boomigameboy" src="https://joyce103081.github.io/mathbook_ar_project/gameboy.png" />
-  <video id="vid" src="https://joyce103081.github.io/mathbook_ar_project/ALL0623-1.mp4"
-         preload="auto" loop="false" playsinline webkit-playsinline muted></video>
+  <div class="hint-text" id="photoHint" style="display: none">
+    <div>按截圖鍵即可跟 BOOMI 拍照</div>
+  </div>
 
-  <!-- A-Frame AR Scene -->
+  
   <a-scene
     vr-mode-ui="enabled: false"
     renderer="antialias: true; alpha: true; precision: mediump"
@@ -69,98 +59,178 @@
     arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false"
   >
     <a-assets>
-      <img id="smile" src="https://joyce103081.github.io/mathbook_ar_project/smile.png" crossorigin="anonymous"/>
+      <video
+        id="vid"
+        src="https://joyce103081.github.io/mathbook_ar_project/ALL0623-1.mp4"
+        preload="auto"
+        loop="false"
+        crossorigin="anonymous"
+        webkit-playsinline
+        playsinline
+        muted
+      ></video>
+
+      <img
+        id="smile"
+        src="https://joyce103081.github.io/mathbook_ar_project/smile.png"
+        crossorigin="anonymous"
+      />
     </a-assets>
 
-    <a-nft videohandler
+    <a-nft
+      videohandler
       type="nft"
       url="https://joyce103081.github.io/mathbook_ar_project/mathbooktry3"
       smooth="true"
       smoothCount="100"
       smoothTolerance="0.08"
-      smoothThreshold="10">
+      smoothThreshold="10"
+    >
+      <a-video
+        id="boomivid"
+        src="#vid"
+        rotation="-90 0 0"
+        position="50 -100 -150"
+        width="210"
+        height="124"
+        visible="false"
+      ></a-video>
+
+      <a-image
+        id="boomismile"
+        src="#smile"
+        rotation="-90 0 0"
+        position="50 -100 -150"
+        width="298"
+        height="420"
+        visible="false"
+      ></a-image>
     </a-nft>
 
     <a-entity camera="far: 3000" position="0 0 0"></a-entity>
   </a-scene>
 
   <script>
-    AFRAME.registerComponent("videohandler", {
-      init: function () {
-        const marker = this.el;
-        const vid = document.getElementById("vid");
-        const gameboy = document.getElementById("boomigameboy");
-        const scanHint = document.getElementById("scanHint");
-        const clickHint = document.getElementById("clickHint");
-        const photoHint = document.getElementById("photoHint");
-        let boomiImage = null;
+    // 📐 畫面裝置比例調整
+    function adjustViewByDevice() {
+      const scene = document.querySelector("a-scene");
+      const isMobile = /iPhone|Android/i.test(navigator.userAgent);
+      const isTablet = /iPad|Tablet|Nexus 7|Nexus 10/i.test(navigator.userAgent);
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const isDesktop = !isMobile && !isTablet;
+      
 
-        scanHint.style.display = "flex";
-        clickHint.style.display = "none";
+      scene.style.transform = "";
+      scene.style.transformOrigin = "";
 
-        marker.addEventListener("markerFound", () => {
-          scanHint.style.display = "none";
-          clickHint.style.display = "flex";
-          vid.style.display = "block";
-          gameboy.style.display = "block";
-          vid.currentTime = 0;
-          vid.muted = true;
-        });
-
-        marker.addEventListener("markerLost", () => {
-          vid.pause();
-          vid.currentTime = 0;
-          vid.style.display = "none";
-          gameboy.style.display = "none";
-          clickHint.style.display = "none";
-          photoHint.style.display = "none";
-          if (boomiImage) {
-            boomiImage.parentNode.removeChild(boomiImage);
-            boomiImage = null;
-          }
-          scanHint.style.display = "flex";
-        });
-
-        document.body.addEventListener("click", () => {
-          if (!vid.paused && !vid.ended) return;
-          if (vid.style.display === "block") {
-            vid.muted = false;
-            vid.play();
-            clickHint.style.display = "none";
-          }
-        });
-
-        vid.addEventListener("ended", () => {
-          vid.style.display = "none";
-          gameboy.style.display = "none";
-
-          boomiImage = document.createElement("a-image");
-          boomiImage.setAttribute("src", "#smile");
-          boomiImage.setAttribute("rotation", "0 0 0");
-          boomiImage.setAttribute("width", "298");
-          boomiImage.setAttribute("height", "420");
-          boomiImage.setAttribute("look-at", "[camera]");
-
-          const screenWidth = window.innerWidth;
-          const screenHeight = window.innerHeight;
-          const isPortrait = screenHeight > screenWidth;
-
-          if (screenWidth < 768) {
-            boomiImage.setAttribute("position", "-150 0 -1200");
-          } else if (screenWidth < 1025) {
-            boomiImage.setAttribute("position", isPortrait ? "-450 0 -1200" : "-300 0 -1000");
-          } else {
-            boomiImage.setAttribute("position", isPortrait ? "-400 100 -1300" : "-150 100 -1200");
-          }
-
-          document.querySelector("a-scene").appendChild(boomiImage);
-          photoHint.style.display = "flex";
-          setTimeout(() => {
-            photoHint.style.display = "none";
-          }, 10000);
-        });
+      if (isMobile) {
+        scene.style.transform = "scale(1) translateY(-20px) translateX(10px)";
+        scene.style.transformOrigin = "top center";
+      } else if (isTablet) {
+        if (isPortrait) {
+          scene.style.transform = "scale(1.3) translateY(-150px) translateX(350px) translateZ(-1300px)";
+          scene.style.transformOrigin = "top center";
+        } else {
+          scene.style.transform = "scale(1.4) translateY(-40px) translateX(150px) translateZ(-700px)";
+          scene.style.transformOrigin = "top center";
+        }
+      } else if (isDesktop) {
+        if (isPortrait) {
+            scene.style.transform = "scale(1.4) translateY(-200px)  translateX(300px) translateZ(-1000px)";
+            scene.style.transformOrigin = "top center";
+        }else {
+            scene.style.transform = "scale(1.6) translateY(-200px) translateX(200px) translateZ(-700px)";
+            scene.style.transformOrigin = "top center";
+        }
       }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      adjustViewByDevice();
     });
+
+    window.addEventListener("resize", () => {
+      adjustViewByDevice();
+    });
+
+    window.onload = function () {
+      const scanHint = document.getElementById("scanHint");
+      const clickHint = document.getElementById("clickHint");
+      const photoHint = document.getElementById("photoHint");
+
+      scanHint.style.display = "none";
+      clickHint.style.display = "none";
+      photoHint.style.display = "none";
+
+      AFRAME.registerComponent("videohandler", {
+        init: function () {
+          var marker = this.el;
+          const vid = document.querySelector("#vid");
+          const boomivid = document.querySelector("#boomivid");
+          const boomismile = document.querySelector("#boomismile");
+
+          document.querySelector("a-scene").addEventListener("loaded", () => {
+            scanHint.style.display = "flex";
+          });
+
+          marker.addEventListener("markerFound", function () {
+            console.log("Marker found");
+            scanHint.style.display = "none";
+            boomivid.setAttribute("visible", true);
+            clickHint.style.display = "flex";
+          });
+
+          marker.addEventListener("markerLost", function () {
+            vid.pause();
+            vid.currentTime = 0;
+            boomivid.setAttribute("visible", false);
+            boomismile.setAttribute("visible", false);
+            clickHint.style.display = "none";
+            photoHint.style.display = "none";
+          });
+
+          document.body.addEventListener("click", function () {
+            if (boomivid.getAttribute("visible") && vid.paused) {
+              vid.muted = false;
+              vid.play();
+              clickHint.style.display = "none";
+            }
+          });
+
+          vid.addEventListener("ended", () => {
+            boomivid.setAttribute("visible", false);
+            const boomiImage = document.createElement("a-image");
+            boomiImage.setAttribute("src", "#smile");
+
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            const isPortrait = screenHeight > screenWidth;
+
+            if (screenWidth < 768) {
+              // 手機
+              boomiImage.setAttribute("position", "-150 0 -1200");
+            } else if (screenWidth < 1025) {
+              // 平板(直:橫)
+              boomiImage.setAttribute("position", isPortrait ? "-450 0 -1200" : "-300 0 -1000");
+            } else {
+              // 桌機(直:橫)
+              boomiImage.setAttribute("position", isPortrait ? "-400 100 -1300" : "-150 100 -1200");
+            }
+
+            boomiImage.setAttribute("rotation", "0 0 0");
+            boomiImage.setAttribute("width", "298");
+            boomiImage.setAttribute("height", "420");
+            boomiImage.setAttribute("look-at", "[camera]");
+            document.querySelector("a-scene").appendChild(boomiImage);
+
+            photoHint.style.display = "flex";
+            setTimeout(() => {
+              photoHint.style.display = "none";
+            }, 10000);
+          });
+        },
+      });
+    };
   </script>
 </body>
 </html>
