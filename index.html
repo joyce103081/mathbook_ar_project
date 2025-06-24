@@ -33,7 +33,13 @@
     .hint-text div {
       color: white;
       font-size: 1.5em;
-      text-shadow: 0 0 3px rgb(142, 142, 142);
+      text-shadow: 0 0 3px rgb(125, 125, 125);
+    }
+    
+     .hint-text1 div {
+      color: white;
+      font-size: 1.25em;
+      text-shadow: 0 0 3px rgb(125, 125, 125);
     }
     
     #skipBtn{
@@ -67,16 +73,17 @@
     <div>記得要開聲音喔</div>
   </div>
 
-  <div class="hint-text" id="photoHint" style="display: none">
-    <div>放下手中的數學作業簿</div>
-    <div>和BOOMI合照吧</div>
-    <div>按 螢幕截圖鍵 即可跟 BOOMI 拍照</div>
+  <div class="hint-text1" id="photoHint" style="display: none">
+    <div>將畫面移開數學作業簿</div>
+    <div>請家人朋友幫你和BOOMI留個合影吧</div>
+    <div>螢幕截圖鍵為拍照按鈕</div>
   </div>
 
   <button id="skipBtn">⏩跳過</button>
   
   <a-scene
     vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false"
     renderer="antialias: true; alpha: true; precision: mediump"
     embedded
     arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false"
