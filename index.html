@@ -188,15 +188,7 @@
     });
 
     window.onload = function () {
-      document.getElementById("menu").style.display = "flex"; 
-
-      const scanHint = document.getElementById("scanHint");
-      const clickHint = document.getElementById("clickHint");
-      const photoHint = document.getElementById("photoHint");
-
-      scanHint.style.display = "none";
-      clickHint.style.display = "none";
-      photoHint.style.display = "none";
+      document.getElementById("menu").style.display = "flex";
 
       AFRAME.registerComponent("videohandler", {
         init: function () {
@@ -204,6 +196,14 @@
           const vid = document.querySelector("#vid");
           const boomivid = document.querySelector("#boomivid");
           const boomismile = document.querySelector("#boomismile");
+          
+          const scanHint = document.getElementById("scanHint");
+          const clickHint = document.getElementById("clickHint");
+          const photoHint = document.getElementById("photoHint");
+
+          scanHint.style.display = "none";
+          clickHint.style.display = "none";
+          photoHint.style.display = "none";
 
           document.querySelector("a-scene").addEventListener("loaded", () => {
             scanHint.style.display = "flex";
@@ -266,6 +266,19 @@
           });
         },
       });
+      
+      function enterVideoMode() {
+      document.getElementById("menu").style.display = "none";
+      document.getElementById("videoMode").style.display = "flex";
+      document.getElementById("videoOverlay").style.display = "flex";
+
+      setTimeout(() => {
+        document.getElementById("videoOverlay").innerHTML = '<p>歡迎來到BOOMI遊戲機</p><p>按藍色按鈕即可觀看影片</p><p>按橘色按鈕即可返回</p>';
+        document.getElementById("blueBtn").style.display = "block";
+        document.getElementById("orangeBtn").style.display = "block";
+        document.getElementById("frameImage").style.display = "block";
+      },);
+    }
     };
   </script>
 </body>
