@@ -5,42 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>BOOMI AR 大進化</title>
 
-  <!-- A-Frame 與 AR.js 套件 -->
   <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.2/dist/aframe.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
 
   <style>
-     html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
+    html, body { margin: 0; padding: 0; overflow: hidden; }
 
-    .hint-text {
+    .hint-text, .menu, .photo-overlay, .video-overlay {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      pointer-events: none;
-    }
-
-    .hint-text div {
-      color: white;
-      font-size: 1.5em;
-      text-shadow: 0 0 3px rgb(142, 142, 142);
-    }
-
-    .menu{
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       display: none;
       justify-content: center;
       align-items: center;
@@ -49,252 +23,134 @@
       color: white;
     }
 
-    .menu button{
+    .menu button, .photo-mode button, .video-mode button {
       padding: 15px 30px;
       font-size: 1.5em;
-      margin: 20px;
+      margin: 10px;
       border: none;
       border-radius: 10px;
       cursor: pointer;
     }
+
+    #blueBtn { background-color: #00aaff; }
+    #orangeBtn, #photoBackBtn { background-color: #ff6600; position: absolute; top: 5%; right: 5%; }
+
+    .boomi-img {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      z-index: 1;
+      display: none;
+    }
   </style>
 </head>
-
 <body>
-  <a-scene device-orientation-permission-ui="enabled: false"></a-scene>
-
+  <!-- 主選單 -->
   <div class="menu" id="menu">
     <button onclick="enterVideoMode()">🎬 觀看介紹影片</button>
     <button onclick="enterPhotoMode()">📸 拍照互動模式</button>
   </div>
 
-  <div class="hint-text" id="scanHint">
-    <div>鏡頭對著數學作業封面會有驚喜喔！</div>
+  <!-- AR提示文字 -->
+  <div class="hint-text" id="scanHint"><div>鏡頭對著數學作業封面會有驚喜喔！</div></div>
+  <div class="hint-text" id="clickHint"><div>點一下畫面開始播放影片</div></div>
+
+  <!-- 拍照模式畫面 -->
+  <div class="photo-overlay" id="photoOverlay">
+    <p>歡迎來到BOOMI互動區</p>
+    <p>點一下畫面與 BOOMI 合照吧！</p>
+    <button id="photoBackBtn" onclick="backToMenu()">⬅️ 返回</button>
   </div>
+  <img id="boomiImage" class="boomi-img" src="https://joyce103081.github.io/mathbook_ar_project/smile.png" />
 
-  <div class="hint-text" id="clickHint" style="display: flex">
-    <div>點一下畫面開始播放影片</div>
-  </div>
-
-  <div class="hint-text" id="photoHint" style="display: none">
-    <div>按截圖鍵即可跟 BOOMI 拍照</div>
-  </div>
-
-    <video 
-    id="videoPlayer" 
-    src="https://joyce103081.github.io/mathbook_ar_project/ALL2.0.mp4" 
-    playsinline 
-    muted 
-    loop 
-    style="width: 100%; height: 100%; object-fit: cover; display: none;"
-    ></video>
-
-    <img 
-      src="https://joyce103081.github.io/mathbook_ar_project/frame.png" 
-      class="frame-img" 
-      id="frameImage" 
-      style="display: none;">
-
-      
-    <button 
-      id="blueBtn" 
-      onclick="playVideo()" 
-      style="display: none; position: absolute; bottom: 20%;">▶️ 觀看
-    </button>
-
-    <button 
-      id="orangeBtn" 
-      onclick="backToMenu()" 
-      style="display: none; position: absolute; top: 5%; right: 5%;">⬅️ 返回
-    </button>
-    
-  </div>
-
-  <div class="photo-mode" id="photoMode">
-    <div class="photo-overlay" id="photoOverlay">
-      <p>歡迎來到BOOMI互動區</p>
-      <p>這裡是一個可以跟BOOMI合照的地方</p>
-      <p>點擊畫面開始拍照</p>
-    </div>
-
-
-    <img 
-      src="https://joyce103081.github.io/mathbook_ar_project/smile.png" 
-      class="boomi-img" 
-      id="boomiImage" 
-      style="display: none;">
-
-    <button 
-      id="shutterBtn" 
-      style="display: none; position: absolute; bottom: 10%;">📸 快門
-    </button>
-
-    <button 
-      onclick="backToMenu()" 
-      style="display: none; position: absolute; top: 5%; right: 5%; background-color: #ff6600;">⬅️ 返回
-    </button>
-
-  </div>
-
-
-  <a-scene 
-    embedded 
+  <!-- AR主畫面 -->
+  <a-scene
+    embedded
     arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false"
-    renderer="antialias: true; alpha: true; precision: mediump"
-  >
+    renderer="antialias: true; alpha: true; precision: mediump">
 
     <a-assets>
-      <video 
-        id="vid" 
-        src="https://joyce103081.github.io/mathbook_ar_project/ALL2.0.mp4" 
-        preload="auto" 
-        loop="false" 
-        crossorigin="anonymous" 
-        webkit-playsinline 
-        playsinline muted
-      ></video>
-
-      <img 
-        id="smile" 
-        src="https://joyce103081.github.io/mathbook_ar_project/smile.png" 
-        crossorigin="anonymous" />
-
+      <video id="vid" src="https://joyce103081.github.io/mathbook_ar_project/ALL2.0.mp4" preload="auto" loop="false" crossorigin="anonymous" webkit-playsinline playsinline muted></video>
+      <img id="smile" src="https://joyce103081.github.io/mathbook_ar_project/smile.png" crossorigin="anonymous" />
     </a-assets>
 
-    <a-nft 
-      videohandler 
-      type="nft" 
-      url="https://joyce103081.github.io/mathbook_ar_project/mathbooktry3" 
-      smooth="true" 
-      smoothCount="100" 
-      smoothTolerance="0.08" 
-      smoothThreshold="10">
-      
-      <a-video 
-        id="boomivid" 
-        src="#vid" 
-        position="0 0 -2" 
-        width="2.1" 
-        height="1.2" 
-        visible="false" 
-        look-at="[camera]"
-        ></a-video>
+    <a-nft videohandler type="nft" url="https://joyce103081.github.io/mathbook_ar_project/mathbooktry3"
+      smooth="true" smoothCount="100" smoothTolerance="0.08" smoothThreshold="10">
 
-      <a-image 
-        id="boomismile" 
-        src="#smile" 
-        position="0 0 -2" 
-        width="2.98" 
-        eight="4.2" 
-        visible="false" 
-        look-at="[camera]"
-        ></a-image>
+      <a-video id="boomivid" src="#vid" rotation="-90 0 0" position="50 -100 -150" width="210" height="124" visible="false"></a-video>
+      <a-image id="boomismile" src="#smile" rotation="-90 0 0" position="50 -100 -150" width="298" height="420" visible="false"></a-image>
     </a-nft>
 
     <a-entity camera></a-entity>
-
   </a-scene>
 
-
   <script>
-     // 📐 畫面裝置比例調整
-    function adjustViewByDevice() {
-      const scene = document.querySelector("a-scene");
-      const isMobile = /iPhone|Android/i.test(navigator.userAgent);
-      const isTablet = /iPad|Tablet|Nexus 7|Nexus 10/i.test(navigator.userAgent);
-      const isPortrait = window.innerHeight > window.innerWidth;
-      const isDesktop = !isMobile && !isTablet;
-      
+    window.onload = () => {
+      document.getElementById("menu").style.display = "flex";
+    };
 
-      scene.style.transform = "";
-      scene.style.transformOrigin = "";
-
-      if (isMobile) {
-        scene.style.transform = "scale(1) translateY(-20px) translateX(10px)";
-        scene.style.transformOrigin = "top center";
-      } else if (isTablet) {
-        if (isPortrait) {
-          scene.style.transform = "scale(1.3) translateY(-150px) translateX(350px) translateZ(-1300px)";
-          scene.style.transformOrigin = "top center";
-        } else {
-          scene.style.transform = "scale(1.4) translateY(-40px) translateX(150px) translateZ(-700px)";
-          scene.style.transformOrigin = "top center";
-        }
-      } else if (isDesktop) {
-        if (isPortrait) {
-            scene.style.transform = "scale(1.4) translateY(-200px)  translateX(300px) translateZ(-1000px)";
-            scene.style.transformOrigin = "top center";
-        }else {
-            scene.style.transform = "scale(1.6) translateY(-200px) translateX(200px) translateZ(-700px)";
-            scene.style.transformOrigin = "top center";
-        }
-      }
+    function enterVideoMode() {
+      document.getElementById("menu").style.display = "none";
+      document.getElementById("scanHint").style.display = "flex";
+      document.getElementById("boomiImage").style.display = "none";
     }
 
-    window.addEventListener("DOMContentLoaded", () => {
-      adjustViewByDevice();
-    });
+    function enterPhotoMode() {
+      document.getElementById("menu").style.display = "none";
+      document.getElementById("photoOverlay").style.display = "flex";
+      document.getElementById("boomiImage").style.display = "block";
+    }
 
-    window.addEventListener("resize", () => {
-      adjustViewByDevice();
-    });
+    function backToMenu() {
+      document.getElementById("scanHint").style.display = "none";
+      document.getElementById("clickHint").style.display = "none";
+      document.getElementById("photoOverlay").style.display = "none";
+      document.getElementById("boomiImage").style.display = "none";
+      document.getElementById("menu").style.display = "flex";
+    }
 
-    window.onload = function () {
-      const scanHint = document.getElementById("scanHint");
-      const clickHint = document.getElementById("clickHint");
-      const photoHint = document.getElementById("photoHint");
+    AFRAME.registerComponent("videohandler", {
+      init: function () {
+        const marker = this.el;
+        const vid = document.querySelector("#vid");
+        const boomivid = document.querySelector("#boomivid");
+        const boomismile = document.querySelector("#boomismile");
+        const scanHint = document.getElementById("scanHint");
+        const clickHint = document.getElementById("clickHint");
 
-      scanHint.style.display = "none";
-      clickHint.style.display = "none";
-      photoHint.style.display = "none";
-
-      AFRAME.registerComponent("videohandler", {
-        init: function () {
-          var marker = this.el;
-          const vid = document.querySelector("#vid");
-          const boomivid = document.querySelector("#boomivid");
-          const boomismile = document.querySelector("#boomismile");
-
-          document.querySelector("a-scene").addEventListener("loaded", () => {
-            document.getElementById("menu").style.display = "flex";
-          });
-
-          function enterVideoMode() {
-            document.getElementById("menu").style.display = "none";
-            scanHint.style.display = "flex";
-
-            marker.addEventListener("markerFound", function () {
-              console.log("Marker found");
-              scanHint.style.display = "none";
-              boomivid.setAttribute("visible", true);
-              clickHint.style.display = "flex";
-            });
-
-            marker.addEventListener("markerLost", function () {
-              vid.pause();
-              vid.currentTime = 0;
-              boomivid.setAttribute("visible", false);
-              boomismile.setAttribute("visible", false);
-              clickHint.style.display = "none";
-              photoHint.style.display = "none";
-            });
-
-            document.body.addEventListener("click", function () {
-              if (boomivid.getAttribute("visible") && vid.paused) {
-                vid.muted = false;
-                vid.play();
-                clickHint.style.display = "none";
-              }
-            });
-
-            vid.addEventListener("ended", () => {
-            boomivid.setAttribute("visible", false);})
-
+        marker.addEventListener("markerFound", () => {
+          if (document.getElementById("scanHint").style.display === "flex") {
+            scanHint.style.display = "none";
+            boomivid.setAttribute("visible", true);
+            clickHint.style.display = "flex";
           }
-        }
-      })
-    } 
-  </script>
+        });
 
+        marker.addEventListener("markerLost", () => {
+          vid.pause();
+          vid.currentTime = 0;
+          boomivid.setAttribute("visible", false);
+          boomismile.setAttribute("visible", false);
+          clickHint.style.display = "none";
+        });
+
+        document.body.addEventListener("click", () => {
+          if (boomivid.getAttribute("visible") && vid.paused) {
+            vid.muted = false;
+            vid.play();
+            clickHint.style.display = "none";
+          }
+        });
+
+        vid.addEventListener("ended", () => {
+          boomivid.setAttribute("visible", false);
+          boomismile.setAttribute("visible", true);
+          setTimeout(() => backToMenu(), 10000);
+        });
+      }
+    });
+  </script>
 </body>
 </html>
