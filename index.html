@@ -1,39 +1,22 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BOOMI AR 大進化</title>
+  <title>BOOMI AR</title>
 
   <!-- A-Frame 與 AR.js 套件 -->
-  <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.2/dist/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
 
   <style>
-    .menu, .video-mode, .photo-mode {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      z-index: 9999;
-      color: white;
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
     }
 
-    .menu button, .video-mode button, .photo-mode button {
-      padding: 15px 30px;
-      font-size: 1.5em;
-      margin: 20px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    .video-overlay, .photo-overlay {
+    .hint-text {
       position: absolute;
       top: 0;
       left: 0;
@@ -42,248 +25,231 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
-      background: rgba(0,0,0,0.6);
-      color: white;
-      z-index: 10000;
-    }
-
-    .frame-img, .boomi-img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      z-index: 9999;
       pointer-events: none;
-      z-index: 1;
     }
 
-    #blueBtn {
-      background-color: #00aaff;
-      z-index: 10001;
+    .hint-text div {
+      color: white;
+      font-size: 1.5em;
+      text-shadow: 0 0 3px rgb(142, 142, 142);
     }
 
-    #orangeBtn {
-      background-color: #ff6600;
-      z-index: 10001;
+    #gameboy-frame {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        object-fit: cover;
+        z-index: 9998;
+        pointer-events: none; /* 讓使用者可以點擊後方的影片區域 */
     }
 
-    @media (max-width: 768px) {
-      .menu button, .video-mode button, .photo-mode button {
-        font-size: 1.2em;
-      }
-    }
   </style>
 </head>
+
 <body>
-  <div class="menu" id="menu">
-    <button onclick="enterVideoMode()">🎬 觀看介紹影片</button>
-    <button onclick="enterPhotoMode()">📸 拍照互動模式</button>
+<!-- 提示文字區 -->
+  <div class="hint-text" id="scanHint">
+    <div>鏡頭對著數學作業封面會有驚喜喔！</div>
   </div>
 
-  <div class="video-mode" id="videoMode">
-    <div class="video-overlay" id="videoOverlay">
-      <p>請將鏡頭對著數學作業簿掃描觀看影片</p>
-    </div>
-
-    <video 
-    id="videoPlayer" 
-    src="https://joyce103081.github.io/mathbook_ar_project/ALL2.0.mp4" 
-    playsinline 
-    muted 
-    loop 
-    style="width: 100%; height: 100%; object-fit: cover; display: none;"
-    ></video>
-
-    <img 
-      src="https://joyce103081.github.io/mathbook_ar_project/frame.png" 
-      class="frame-img" 
-      id="frameImage" 
-      style="display: none;">
-
-      
-    <button 
-      id="blueBtn" 
-      onclick="playVideo()" 
-      style="display: none; position: absolute; bottom: 20%;">▶️ 觀看
-    </button>
-
-    <button 
-      id="orangeBtn" 
-      onclick="backToMenu()" 
-      style="display: none; position: absolute; top: 5%; right: 5%;">⬅️ 返回
-    </button>
-    
+  <div class="hint-text" id="clickHint" style="display: flex">
+    <div>點一下畫面開始播放影片</div>
   </div>
 
-  <div class="photo-mode" id="photoMode">
-    <div class="photo-overlay" id="photoOverlay">
-      <p>歡迎來到BOOMI互動區</p>
-      <p>這裡是一個可以跟BOOMI合照的地方</p>
-      <p>點擊畫面開始拍照</p>
-    </div>
-    
-
-    <img 
-      src="https://joyce103081.github.io/mathbook_ar_project/smile.png" 
-      class="boomi-img" 
-      id="boomiImage" 
-      style="display: none;">
-
-    <button 
-      id="shutterBtn" 
-      style="display: none; position: absolute; bottom: 10%;">📸 快門
-    </button>
-
-    <button 
-      onclick="backToMenu()" 
-      style="display: none; position: absolute; top: 5%; right: 5%; background-color: #ff6600;">⬅️ 返回
-    </button>
-
+  <div class="hint-text" id="photoHint" style="display: none">
+    <div>按截圖鍵即可跟 BOOMI 拍照</div>
   </div>
 
+  <img id="boomigameboy" src="https://joyce103081.github.io/mathbook_ar_project/gameboy.png" style="display: none;"/>
 
-  <a-scene 
-    embedded 
-    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false"
+  
+  <a-scene
+    vr-mode-ui="enabled: false"
     renderer="antialias: true; alpha: true; precision: mediump"
+    embedded
+    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false"
   >
-
     <a-assets>
-      <video 
-        id="vid" 
-        src="https://joyce103081.github.io/mathbook_ar_project/ALL2.0.mp4" 
-        preload="auto" 
-        loop="false" 
-        crossorigin="anonymous" 
-        webkit-playsinline 
-        playsinline muted
+      <video
+        id="vid"
+        src="https://joyce103081.github.io/mathbook_ar_project/ALL2.0.mp4"
+        preload="auto"
+        loop="false"
+        crossorigin="anonymous"
+        webkit-playsinline
+        playsinline
+        muted
       ></video>
 
-      <img 
-        id="smile" 
-        src="https://joyce103081.github.io/mathbook_ar_project/smile.png" 
-        crossorigin="anonymous" />
-
+      <img
+        id="smile"
+        src="https://joyce103081.github.io/mathbook_ar_project/smile.png"
+        crossorigin="anonymous"
+      />
     </a-assets>
 
-    <a-nft 
-      videohandler 
-      type="nft" 
-      url="https://joyce103081.github.io/mathbook_ar_project/mathbooktry3" 
-      smooth="true" 
-      smoothCount="100" 
-      smoothTolerance="0.08" 
-      smoothThreshold="10">
-      
-      <a-video 
-        id="boomivid" 
-        src="#vid" 
-        position="0 0 -2" 
-        width="2.1" 
-        height="1.2" 
-        visible="false" 
-        look-at="[camera]"
-        ></a-video>
+    <a-nft
+      videohandler
+      type="nft"
+      url="https://joyce103081.github.io/mathbook_ar_project/mathbooktry3"
+      smooth="true"
+      smoothCount="100"
+      smoothTolerance="0.08"
+      smoothThreshold="10"
+    >
+      <a-video
+        id="boomivid"
+        src="#vid"
+        rotation="-90 0 0"
+        position="50 -100 -150"
+        width="210"
+        height="124"
+        visible="false"
+      ></a-video>
 
-      <a-image 
-        id="boomismile" 
-        src="#smile" 
-        position="0 0 -2" 
-        width="2.98" 
-        eight="4.2" 
-        visible="false" 
-        look-at="[camera]"
-        ></a-image>
+
+      <a-image
+        id="boomismile"
+        src="#smile"
+        rotation="-90 0 0"
+        position="50 -100 -150"
+        width="298"
+        height="420"
+        visible="false"
+      ></a-image>
+
+
     </a-nft>
 
-    <a-entity camera></a-entity>
-
+    <a-entity camera="far: 3000" position="0 0 0"></a-entity>
   </a-scene>
 
-
   <script>
-    window.onload = () => {
-      document.getElementById("menu").style.display = "flex";
+    // 📐 畫面裝置比例調整
+    function adjustViewByDevice() {
+      const scene = document.querySelector("a-scene");
+      const isMobile = /iPhone|Android/i.test(navigator.userAgent);
+      const isTablet = /iPad|Tablet|Nexus 7|Nexus 10/i.test(navigator.userAgent);
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const isDesktop = !isMobile && !isTablet;
+      
+
+      scene.style.transform = "";
+      scene.style.transformOrigin = "";
+
+      if (isMobile) {
+        scene.style.transform = "scale(1) translateY(-20px) translateX(10px)";
+        scene.style.transformOrigin = "top center";
+      } else if (isTablet) {
+        if (isPortrait) {
+          scene.style.transform = "scale(1.3) translateY(-150px) translateX(350px) translateZ(-1300px)";
+          scene.style.transformOrigin = "top center";
+        } else {
+          scene.style.transform = "scale(1.4) translateY(-40px) translateX(150px) translateZ(-700px)";
+          scene.style.transformOrigin = "top center";
+        }
+      } else if (isDesktop) {
+        if (isPortrait) {
+            scene.style.transform = "scale(1.4) translateY(-200px)  translateX(300px) translateZ(-1000px)";
+            scene.style.transformOrigin = "top center";
+        }else {
+            scene.style.transform = "scale(1.6) translateY(-200px) translateX(200px) translateZ(-700px)";
+            scene.style.transformOrigin = "top center";
+        }
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      adjustViewByDevice();
+    });
+
+    window.addEventListener("resize", () => {
+      adjustViewByDevice();
+    });
+
+    window.onload = function () {
+      const scanHint = document.getElementById("scanHint");
+      const clickHint = document.getElementById("clickHint");
+      const photoHint = document.getElementById("photoHint");
+
+      scanHint.style.display = "none";
+      clickHint.style.display = "none";
+      photoHint.style.display = "none";
 
       AFRAME.registerComponent("videohandler", {
         init: function () {
           var marker = this.el;
           const vid = document.querySelector("#vid");
           const boomivid = document.querySelector("#boomivid");
+          const boomigameboy = document.querySelector("#boomigameboy");
           const boomismile = document.querySelector("#boomismile");
 
+          document.querySelector("a-scene").addEventListener("loaded", () => {
+            scanHint.style.display = "flex";
+          });
+
           marker.addEventListener("markerFound", function () {
+            console.log("Marker found");
+            scanHint.style.display = "none";
             boomivid.setAttribute("visible", true);
+            boomigameboy.style.display = "block"; 
+            clickHint.style.display = "flex";
           });
 
           marker.addEventListener("markerLost", function () {
             vid.pause();
             vid.currentTime = 0;
             boomivid.setAttribute("visible", false);
-            boomismile.setAttribute("visible", false);
+            boomigameboy.style.display = "none";
+            clickHint.style.display = "none";
+            photoHint.style.display = "none";
           });
 
           document.body.addEventListener("click", function () {
             if (boomivid.getAttribute("visible") && vid.paused) {
               vid.muted = false;
               vid.play();
+              clickHint.style.display = "none";
             }
           });
 
           vid.addEventListener("ended", () => {
             boomivid.setAttribute("visible", false);
-            boomismile.setAttribute("visible", true);
+            const boomiImage = document.createElement("a-image");
+            boomiImage.setAttribute("src", "#smile");
+
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            const isPortrait = screenHeight > screenWidth;
+
+            if (screenWidth < 768) {
+              // 手機
+              boomiImage.setAttribute("position", "-150 0 -1200");
+            } else if (screenWidth < 1025) {
+              // 平板(直:橫)
+              boomiImage.setAttribute("position", isPortrait ? "-450 0 -1200" : "-300 0 -1000");
+            } else {
+              // 桌機(直:橫)
+              boomiImage.setAttribute("position", isPortrait ? "-400 100 -1300" : "-150 100 -1200");
+            }
+
+            boomiImage.setAttribute("rotation", "0 0 0");
+            boomiImage.setAttribute("width", "298");
+            boomiImage.setAttribute("height", "420");
+            boomiImage.setAttribute("look-at", "[camera]");
+            document.querySelector("a-scene").appendChild(boomiImage);
+
+            photoHint.style.display = "flex";
+            setTimeout(() => {
+              photoHint.style.display = "none";
+            }, 10000);
           });
-        }
+        },
       });
     };
-
-    function enterVideoMode() {
-      document.getElementById("menu").style.display = "none";
-      document.getElementById("videoMode").style.display = "flex";
-      document.getElementById("videoOverlay").style.display = "flex";
-
-      setTimeout(() => {
-        document.getElementById("videoOverlay").innerHTML = '<p>歡迎來到BOOMI遊戲機</p><p>按藍色按鈕即可觀看影片</p><p>按橘色按鈕即可返回</p>';
-        document.getElementById("blueBtn").style.display = "block";
-        document.getElementById("orangeBtn").style.display = "block";
-        document.getElementById("frameImage").style.display = "block";
-      }, 3000);
-    }
-
-    function playVideo() {
-      document.getElementById("videoOverlay").style.display = "none";
-      const player = document.getElementById("videoPlayer");
-      player.style.display = "block";
-      player.muted = false;
-      player.play();
-    }
-
-    function enterPhotoMode() {
-      document.getElementById("menu").style.display = "none";
-      document.getElementById("photoMode").style.display = "flex";
-      document.getElementById("photoOverlay").style.display = "flex";
-
-      document.getElementById("photoMode").addEventListener("click", () => {
-        document.getElementById("photoOverlay").style.display = "none";
-        document.getElementById("boomiImage").style.display = "block";
-        document.getElementById("shutterBtn").style.display = "block";
-      }, { once: true });
-    }
-
-    function backToMenu() {
-      const vid = document.getElementById("videoPlayer");
-      vid.pause();
-      vid.currentTime = 0;
-      vid.style.display = "none";
-
-      ["videoMode", "photoMode"].forEach(id => document.getElementById(id).style.display = "none");
-      ["blueBtn", "orangeBtn", "frameImage", "boomiImage", "shutterBtn"].forEach(id => document.getElementById(id).style.display = "none");
-      document.getElementById("videoOverlay").innerHTML = '<p>請將鏡頭對著數學作業簿掃描觀看影片</p>';
-      document.getElementById("menu").style.display = "flex";
-    }
   </script>
 </body>
 </html>
