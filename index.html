@@ -210,6 +210,7 @@
 
       AFRAME.registerComponent("videohandler", {
         init: function () {
+          let boomiImage = null;
           var marker = this.el;
           const vid = document.querySelector("#vid");
           const boomivid = document.querySelector("#boomivid");
@@ -225,8 +226,10 @@
             scanHint.style.display = "none";
             boomivid.setAttribute("visible", true);
             clickHint.style.display = "flex";
-            boomiImage.setAttribute("visible", false);
 
+             if (boomiImage) {
+              boomiImage.setAttribute("visible", false); // 👈 若已產生拍照圖，隱藏它
+             }
           });
 
           marker.addEventListener("markerLost", function () {
@@ -257,7 +260,7 @@
           vid.addEventListener("ended", () => {
             boomivid.setAttribute("visible", false);
             skipBtn.style.display = "none";
-            const boomiImage = document.createElement("a-image");
+            boomiImage = document.createElement("a-image");
             boomiImage.setAttribute("src", "#smile");
 
             const screenWidth = window.innerWidth;
