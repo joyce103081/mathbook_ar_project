@@ -35,16 +35,27 @@
       text-shadow: 0 0 3px rgb(142, 142, 142);
     }
 
-    #boomigameboy {
+    #boomigameboy{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        object-fit: contain;
+        z-index: 9998;
+        pointer-events: none; /* 讓使用者可以點擊後方的影片區域 */
+    }
+
+    #boomivid{
         position: absolute;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
         object-fit: cover;
-        z-index: 9998;
-        pointer-events: none; /* 讓使用者可以點擊後方的影片區域 */
+        z-index: 9997;
     }
+
 
   </style>
 </head>
@@ -63,8 +74,12 @@
     <div>按截圖鍵即可跟 BOOMI 拍照</div>
   </div>
 
-  <img id="boomigameboy" src="https://joyce103081.github.io/mathbook_ar_project/gameboy.png" style="display: none;"/>
+  
+   <img id="boomigameboy" src="https://joyce103081.github.io/mathbook_ar_project/gameboy.png" style="display: none;"/>
+   <video id="boomivid" src="https://joyce103081.github.io/mathbook_ar_project/ALL0623.mp4" style="display: none;" webkit-playsinline playsinline muted ></video>
+  
 
+  
   
   <a-scene
     vr-mode-ui="enabled: false"
@@ -73,17 +88,6 @@
     arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false"
   >
     <a-assets>
-      <video
-        id="vid"
-        src="https://joyce103081.github.io/mathbook_ar_project/ALL2.0.mp4"
-        preload="auto"
-        loop="false"
-        crossorigin="anonymous"
-        webkit-playsinline
-        playsinline
-        muted
-      ></video>
-
       <img
         id="smile"
         src="https://joyce103081.github.io/mathbook_ar_project/smile.png"
@@ -100,16 +104,6 @@
       smoothTolerance="0.08"
       smoothThreshold="10"
     >
-      <a-video
-        id="boomivid"
-        src="#vid"
-        rotation="-90 0 0"
-        position="50 -100 -150"
-        width="210"
-        height="124"
-        visible="false"
-      ></a-video>
-
 
       <a-image
         id="boomismile"
@@ -120,7 +114,6 @@
         height="420"
         visible="false"
       ></a-image>
-
 
     </a-nft>
 
@@ -182,7 +175,7 @@
       AFRAME.registerComponent("videohandler", {
         init: function () {
           var marker = this.el;
-          const vid = document.querySelector("#vid");
+          const vid = document.getElementById("boomivid");
           const boomivid = document.querySelector("#boomivid");
           const boomigameboy = document.querySelector("#boomigameboy");
           const boomismile = document.querySelector("#boomismile");
@@ -194,7 +187,8 @@
           marker.addEventListener("markerFound", function () {
             console.log("Marker found");
             scanHint.style.display = "none";
-            boomivid.setAttribute("visible", true);
+            boomivid.style.display = "block";
+            vid.muted = true;
             boomigameboy.style.display = "block"; 
             clickHint.style.display = "flex";
           });
@@ -202,14 +196,15 @@
           marker.addEventListener("markerLost", function () {
             vid.pause();
             vid.currentTime = 0;
-            boomivid.setAttribute("visible", false);
+            scanHint.style.display = "flex";
+            boomivid.style.display = "none";
             boomigameboy.style.display = "none";
             clickHint.style.display = "none";
             photoHint.style.display = "none";
           });
 
           document.body.addEventListener("click", function () {
-            if (boomivid.getAttribute("visible") && vid.paused) {
+            if (boomivid.style.display === "block" && vid.paused) {
               vid.muted = false;
               vid.play();
               clickHint.style.display = "none";
@@ -217,7 +212,8 @@
           });
 
           vid.addEventListener("ended", () => {
-            boomivid.setAttribute("visible", false);
+            boomivid.style.display = "none";
+            boomigameboy.style.display = "none";
             const boomiImage = document.createElement("a-image");
             boomiImage.setAttribute("src", "#smile");
 
