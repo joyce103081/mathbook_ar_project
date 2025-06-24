@@ -54,7 +54,7 @@
   </div>
 
   <!-- AR提示文字 -->
-  <div class="hint-text" id="scanHint"><div>鏡頭對著數學作業封面會有驚喜喔！</div></div>
+  <div class="hint-text" id="scanHint"><div>請將鏡頭對著數學作業封面掃描即可觀看影片！</div></div>
   <div class="hint-text" id="clickHint"><div>點一下畫面開始播放影片</div></div>
 
   <!-- 拍照模式畫面 -->
@@ -88,37 +88,35 @@
 
   <script>
     window.onload = () => {
-      document.getElementById("menu").style.display = "flex";
-    };
+      AFRAME.registerComponent("videohandler", {
+        init: function () {
+          const marker = this.el;
+          const vid = document.querySelector("#vid");
+          const boomivid = document.querySelector("#boomivid");
+          const boomismile = document.querySelector("#boomismile");
+          const scanHint = document.getElementById("scanHint");
+          const clickHint = document.getElementById("clickHint");
 
-    function enterVideoMode() {
-      document.getElementById("menu").style.display = "none";
-      document.getElementById("scanHint").style.display = "flex";
-      document.getElementById("boomiImage").style.display = "none";
-    }
+          document.getElementById("menu").style.display = "flex";
 
-    function enterPhotoMode() {
-      document.getElementById("menu").style.display = "none";
-      document.getElementById("photoOverlay").style.display = "flex";
-      document.getElementById("boomiImage").style.display = "block";
-    }
+          function enterVideoMode() {
+            document.getElementById("menu").style.display = "none";
+            document.getElementById("scanHint").style.display = "flex";
+            document.getElementById("boomiImage").style.display = "none";}
 
-    function backToMenu() {
-      document.getElementById("scanHint").style.display = "none";
-      document.getElementById("clickHint").style.display = "none";
-      document.getElementById("photoOverlay").style.display = "none";
-      document.getElementById("boomiImage").style.display = "none";
-      document.getElementById("menu").style.display = "flex";
-    }
+        function enterPhotoMode() {
+            document.getElementById("menu").style.display = "none";
+            document.getElementById("photoOverlay").style.display = "flex";
+            document.getElementById("boomiImage").style.display = "block";}
 
-    AFRAME.registerComponent("videohandler", {
-      init: function () {
-        const marker = this.el;
-        const vid = document.querySelector("#vid");
-        const boomivid = document.querySelector("#boomivid");
-        const boomismile = document.querySelector("#boomismile");
-        const scanHint = document.getElementById("scanHint");
-        const clickHint = document.getElementById("clickHint");
+        function backToMenu() {
+            document.getElementById("scanHint").style.display = "none";
+             document.getElementById("clickHint").style.display = "none";
+             document.getElementById("photoOverlay").style.display = "none";
+              document.getElementById("boomiImage").style.display = "none";
+              document.getElementById("menu").style.display = "flex";
+            }
+
 
         marker.addEventListener("markerFound", () => {
           if (document.getElementById("scanHint").style.display === "flex") {
@@ -150,7 +148,13 @@
           setTimeout(() => backToMenu(), 10000);
         });
       }
-    });
+    });   
+
+    };
+
+    
+
+   
   </script>
 </body>
 </html>
