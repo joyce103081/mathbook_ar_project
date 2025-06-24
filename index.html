@@ -49,8 +49,6 @@
       flex-direction: column;
       z-index: 9999;
       pointer-events: none;
-      background-color: rgb(127, 127, 127);
-      opacity: 0.6;
     }
 
      .hint-text1 div {
@@ -226,6 +224,8 @@
             scanHint.style.display = "none";
             boomivid.setAttribute("visible", true);
             clickHint.style.display = "flex";
+            boomiImage.setAttribute("visible", false);
+
           });
 
           marker.addEventListener("markerLost", function () {
